@@ -2,21 +2,22 @@ import { motion } from 'framer-motion';
 import { WEB_NAME, type FetchResponseError } from '../utils/api';
 import Button from '../ui/Button';
 import { AuthSchema } from '../app/auth/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch } from '../app/store';
 import { Input } from '../ui/Input';
 import { Label } from '../ui/Label';
 import { zodErrorToString } from '../utils/handleZodError';
-import { fetchUserInfo, userLogin } from '../app/auth/authSlice';
+import { fetchUserInfo, selectUser, userLogin } from '../app/auth/authSlice';
 import { useNavigate } from 'react-router';
-import {CircleAlert} from 'lucide-react'
+import { CircleAlert } from 'lucide-react'
 
 const Login = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
     const dispatch: AppDispatch = useDispatch();
+    const user = useSelector(selectUser);
     const [credentials, setCredentials] = useState<{ email: string; password: string }>({ email: '', password: '' });
 
     const handleSubmit = async (e) => {
@@ -42,6 +43,12 @@ const Login = () => {
             toast.error(`Validation errors: ${errorMessages}`);
         }
     };
+
+    useEffect(() => {
+        if (user.email) {
+            return navigate('/dashboard')
+        }
+    }, [navigate, user])
 
     return (
         <motion.div
