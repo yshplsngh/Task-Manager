@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ProcessedResponse, api } from '../../utils/api';
 import { RootState } from '../store';
-import { UserData } from './types';
+import { UserData, type AuthSchemaType } from './types';
 
 interface authState {
   userData: UserData;
@@ -22,6 +22,10 @@ export const fetchUserInfo = createAsyncThunk('/api/user', async () => {
   const url = '/api/user';
   return await api.get<UserData>(url);
 });
+export const userLogin = createAsyncThunk('/api/auth/login', async (data:AuthSchemaType)=> {
+  const url = '/api/auth/login'
+  return await api.post(url,data);
+})
 
 const authSlice = createSlice({
   name: 'auth',

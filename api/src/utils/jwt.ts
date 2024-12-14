@@ -56,11 +56,12 @@ export const reIssueAccessToken = async (refreshToken: string) => {
       email: decoded.email,
     },
     select: {
+      id:true,
       email: true,
     },
   });
   if (!userExist) {
     return false;
   }
-  return signJWT({ email: userExist.email }, { expiresIn: config.ATTL });
+  return signJWT({ ...userExist }, { expiresIn: config.ATTL });
 };
