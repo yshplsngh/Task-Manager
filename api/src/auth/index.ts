@@ -1,8 +1,6 @@
 import type { Express, Response, Request } from 'express';
 import bcrypt from 'bcrypt'
 
-import config from '../utils/config';
-import { createError } from '../utils/errorHandling';
 import { AuthSchema } from './types';
 import prisma from '../database';
 
