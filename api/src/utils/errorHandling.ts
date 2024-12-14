@@ -45,6 +45,7 @@ export function handleError({
         'uncaught exception or unhandled rejection, Node process finished !!',
     };
   }
+  console.log(error)
   return error;
 }
 
