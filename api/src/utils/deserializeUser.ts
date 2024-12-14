@@ -15,7 +15,6 @@ export const deserializeUser = async (
   }
 
   const { decoded, expired } = await validateToken(accessToken);
-
   //if AT is not expired then set user detail from jwt in res
   if (!expired && decoded) {
     res.locals.user = decoded;

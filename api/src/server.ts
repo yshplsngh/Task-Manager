@@ -6,6 +6,7 @@ import { errorHandling, handleError } from './utils/errorHandling';
 
 // routes import
 import authRoutes from './auth';
+import userRoutes from './user';
 
 import config from './utils/config';
 import { deserializeUser } from './utils/deserializeUser';
@@ -44,6 +45,7 @@ export const createServer = (): Express => {
   });
 
   authRoutes(app);
+  userRoutes(app);
 
   app.use(errorHandling);
   return app;
