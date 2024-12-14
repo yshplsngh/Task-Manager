@@ -28,9 +28,9 @@ model Task {
   User       User       @relation(fields: [userId], references: [id])
   title      String
   priority   Int
-  taskStatus TaskStatus @default(Pending)
-  startTime  DateTime
-  endTime    DateTime
+  taskStatus TaskStatus
+  startTime  String
+  endTime    String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }

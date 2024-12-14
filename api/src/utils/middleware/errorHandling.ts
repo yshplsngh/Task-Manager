@@ -1,6 +1,6 @@
 import type { NextFunction, Response, Request } from 'express';
 import { ZodError } from 'zod';
-import { zodErrorToString } from './handleZodError';
+import { zodErrorToString } from '../handleZodError';
 
 export class createError extends Error {
   code: number;

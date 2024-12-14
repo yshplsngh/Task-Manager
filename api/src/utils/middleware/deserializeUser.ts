@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { reIssueAccessToken, validateToken } from './jwt';
-import { ATCookieOptions } from '../auth';
+import { reIssueAccessToken, validateToken } from '../jwt';
+import { ATCookieOptions } from '../../auth';
 
 export const deserializeUser = async (
   req: Request,

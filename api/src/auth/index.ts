@@ -10,7 +10,7 @@ import bcrypt from 'bcrypt';
 import { AuthSchema } from './types';
 import prisma from '../database';
 import { signJWT } from '../utils/jwt';
-import { createError } from '../utils/errorHandling';
+import { createError } from '../utils/middleware/errorHandling';
 import config from '../utils/config';
 
 export const ATCookieOptions: CookieOptions = {

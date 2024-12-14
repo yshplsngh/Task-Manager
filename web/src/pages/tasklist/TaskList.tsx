@@ -20,7 +20,7 @@ const TaskList = ({ nextStep }: { nextStep: () => void }) => {
                     <Button
                         type={'button'}
                         variant={'secondary'}
-                        text={`Create New Task`}
+                        text={`Add New Task`}
                         icon={<SquarePlus className={'h-4 w-4'} />}
                         onClick={() => nextStep()}
                         className={'max-w-fit'}

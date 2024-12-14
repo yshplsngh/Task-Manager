@@ -2,14 +2,15 @@ import express, { Express, Request, Response } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { errorHandling, handleError } from './utils/errorHandling';
+import { errorHandling, handleError } from './utils/middleware/errorHandling';
 
 // routes import
 import authRoutes from './auth';
 import userRoutes from './user';
+import taskRoutes from './task';
 
 import config from './utils/config';
-import { deserializeUser } from './utils/deserializeUser';
+import { deserializeUser } from './utils/middleware/deserializeUser';
 
 export const createServer = (): Express => {
   const app: Express = express();
@@ -46,6 +47,7 @@ export const createServer = (): Express => {
 
   authRoutes(app);
   userRoutes(app);
+  taskRoutes(app);
 
   app.use(errorHandling);
   return app;
