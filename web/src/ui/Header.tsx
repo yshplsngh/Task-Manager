@@ -15,6 +15,12 @@ function Header() {
     </Link>
   );
 
+  const taskListBtn = (
+    <Link to={`/tasklist`}>
+      <Button type={'button'} variant={'outlineB'} text={'Task List'} />
+    </Link>
+  );
+
   const loginBtn = (
     <Link to="/login">
       <Button type={'button'} variant={'outlineB'} text={'Sign in'} />
@@ -30,7 +36,7 @@ function Header() {
       <div className="flex items-center justify-between px-5 py-2 md:px-9 md:py-5">
         <div className="text-xl md:text-3xl">
           <Link to={'/'} className="flex items-center space-x-1">
-            <span className="font-bold">Task</span>
+            <span className="font-bold bg-gradient-to-br from-green-500 to-green-800 text-transparent bg-clip-text">Task Manager</span>
           </Link>
         </div>
 
@@ -41,12 +47,13 @@ function Header() {
               <LoadingSpinner />
             ) : !user.id ? (
               <>
-              {/* show button when user is not login */}
+                {/* show button when user is not login */}
                 {loginBtn}
               </>
             ) : (
               <>
-              {/* button when user is login */}
+                {/* button when user is login */}
+                {taskListBtn}
                 {dashboardBtn}
               </>
             )}

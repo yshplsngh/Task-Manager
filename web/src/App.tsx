@@ -8,7 +8,8 @@ import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Layout from './utils/Layout';
 import ProtectedRoute from './utils/ProtectedRoute'
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/dashboard/Dashboard';
+import ManageTaskList from './pages/tasklist/ManageTaskList';
 
 export default function App(): ReactElement {
   return (
@@ -21,6 +22,7 @@ export default function App(): ReactElement {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/tasklist" element={<ManageTaskList/>} />
             </Route>
             
             <Route path={'*'} element={<NotFound />} />

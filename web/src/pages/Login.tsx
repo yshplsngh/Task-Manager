@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { WEB_NAME, type FetchResponseError } from '../utils/api';
 import Button from '../ui/Button';
-import { AuthSchema } from '../app/auth/types';
+import { AuthSchema , AuthSchemaType} from '../app/auth/types';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,7 +18,7 @@ const Login = () => {
     const navigate = useNavigate();
     const dispatch: AppDispatch = useDispatch();
     const user = useSelector(selectUser);
-    const [credentials, setCredentials] = useState<{ email: string; password: string }>({ email: '', password: '' });
+    const [credentials, setCredentials] = useState<AuthSchemaType>({ email: '', password: '' });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
