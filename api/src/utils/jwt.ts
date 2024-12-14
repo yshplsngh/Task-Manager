@@ -6,6 +6,7 @@ export const signJWT = (
   user: object,
   options?: jwt.SignOptions | undefined,
 ) => {
+  console.log(user);
   const ans = jwt.sign(user, config.AT_SECRET, { ...(options && options) });
   return ans;
 };

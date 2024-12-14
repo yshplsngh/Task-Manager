@@ -49,6 +49,7 @@ export default function authRoutes(app: Express): void {
           email: parsedResult.data.email,
         },
         select: {
+          id:true,
           email: true,
         },
       });
@@ -57,11 +58,11 @@ export default function authRoutes(app: Express): void {
         return next(new createError('failed to create user', 422));
       }
       const accessToken = signJWT(
-        { email: user.email },
+        { ...user },
         { expiresIn: config.ATTL },
       );
       const refreshToken = signJWT(
-        { email: user.email },
+        { ...user },
         { expiresIn: config.RTTL },
       );
 
