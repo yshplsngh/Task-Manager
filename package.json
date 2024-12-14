@@ -2,19 +2,13 @@
   "name": "reunion",
   "private": true,
   "scripts": {
-    "lint": "npm run lint:api && npm run lint:web",
-    "lint:api": "cd api && npm run lint",
-    "lint:web": "cd web && npm run lint",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,html}\"",
     "format:fix": "prettier --write \"**/*.{ts,tsx,js,jsx,html}\"",
-    "prepare": "husky",
     "dev:api": "cd api && npm run dev",
     "dev:web": "cd web && npm run dev"
   },
   "devDependencies": {
     "@types/react-syntax-highlighter": "^15.5.13",
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6"
   },
