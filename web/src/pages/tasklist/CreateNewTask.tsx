@@ -8,9 +8,11 @@ import { zodErrorToString } from "../../utils/handleZodError"
 import { toast } from "sonner"
 import Toggle from "../../ui/Toggle"
 import { SquarePlus } from "lucide-react"
+import DateTime from "../../ui/DateTime"
+import type { Dayjs } from "dayjs"
 
 const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startStep: () => void }) => {
-    
+
     const [task, setTask] = useState<TaskSchemaType>({ title: '', priority: 1, taskStatus: 'Pending', startTime: '', endTime: '' });
 
     const handleSubmit = async (e) => {
@@ -37,6 +39,17 @@ const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startSte
             toast.error(`Validation errors: ${errorMessages}`);
         }
     };
+
+    const handleDateTimeChange = (startDateTime: Dayjs | null, endDateTime: Dayjs | null) => {
+        if (startDateTime && endDateTime) {
+            setTask({
+                ...task,
+                startTime: startDateTime.format('YYYY-MM-DD HH:mm:ss'),
+                endTime: endDateTime.format('YYYY-MM-DD HH:mm:ss')
+            });
+        }
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -45,7 +58,7 @@ const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startSte
         >
             <div className="flex h-screen items-center justify-center text-black">
                 <div className="flex items-center justify-center">
-                    <div className="w-[26rem] overflow-hidden rounded-2xl border-y border-gray-200 sm:border sm:shadow-xl">
+                    <div className="w-[30rem] overflow-hidden rounded-2xl border-y border-gray-200 sm:border sm:shadow-xl">
                         <div className="bg-whitish flex flex-col justify-center space-y-3 border-b border-gray-200 px-4 py-6 pt-8 sm:px-10">
                             <div className={''}>
                                 <h3 className="text-xl font-semibold tracking-wide">
@@ -55,7 +68,7 @@ const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startSte
                         </div>
 
                         <div className="flex flex-col space-y-3 bg-gray-50 px-4 py-8 sm:px-10">
-                            <form onSubmit={handleSubmit} className='space-y-3'>
+                            <form onSubmit={handleSubmit} className='space-y-5'>
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Title</Label>
                                     <Input id="title" type="text" name="title" required onChange={(e) => setTask({ ...task, title: e.target.value })} />
@@ -71,15 +84,23 @@ const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startSte
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-
+                                    <DateTime onDateTimeChange={handleDateTimeChange} />
                                 </div>
-                                <Button
-                                    type={'submit'}
-                                    variant={'secondary'}
-                                    text={'Add Task'}
-                                    className='h-10'
-                                    icon={<SquarePlus className={'h-4 w-4'} />}
-                                />
+                                <div className="flex space-x-3 pt-10">
+                                    <Button
+                                        type={'button'}
+                                        variant={'secondary'}
+                                        text={'cancel'}
+                                        className='h-10'
+                                    />
+                                    <Button
+                                        type={'submit'}
+                                        variant={'secondary'}
+                                        text={'Add Task'}
+                                        className='h-10'
+                                        icon={<SquarePlus className={'h-4 w-4'} />}
+                                    />
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -88,4 +109,5 @@ const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startSte
         </motion.div>
     )
 }
+
 export default CreateNewTask
