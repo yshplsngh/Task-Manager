@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { LayoutDashboard, SquarePlus } from "lucide-react";
 import Button from "../../ui/Button";
-import Table from "./compoenent/Table.";
+import Table from "./Table.";
 
-const TaskList = ({ nextStep }: { nextStep: () => void }) => {
+const TaskList = ({ reachStep }: { reachStep: (whichPage:number) => void }) => {
 
     return (
         <motion.div
@@ -23,7 +23,7 @@ const TaskList = ({ nextStep }: { nextStep: () => void }) => {
                         variant={'secondary'}
                         text={`Add New Task`}
                         icon={<SquarePlus className={'h-4 w-4'} />}
-                        onClick={() => nextStep()}
+                        onClick={() => reachStep(1)}
                         className={'max-w-fit'}
                     />
                 </div>

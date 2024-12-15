@@ -1,15 +1,12 @@
 import { useCallback, useState } from 'react';
 
-export const useSteps = (pageCount:number) => {
-  console.log(pageCount);
+export const useSteps = (pageCount: number) => {
   const [step, setStep] = useState<number>(0);
-  const startStep = useCallback(() => setStep(0), []);
-  const nextStep = useCallback(() => setStep((prevStep) => prevStep + 1), []);
-  const prevStep = useCallback(
-    () => setStep((prevStep) => (prevStep > 0 ? prevStep - 1 : prevStep)),
-    [],
+  const reachStep = useCallback(
+    (whichStep: number) =>
+      setStep(whichStep <= pageCount && whichStep >= 0 ? whichStep : 0),
+    [pageCount],
   );
-  // const reachStep = useCallback()
 
-  return { step, setStep, startStep, nextStep, prevStep };
+  return { step, setStep, reachStep };
 };

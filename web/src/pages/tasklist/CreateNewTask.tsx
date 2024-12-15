@@ -15,8 +15,8 @@ import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../../app/store"
 import { createNewTask } from "../../app/task/taskSlice"
 
-const CreateNewTask = ({ startStep }: { startStep: () => void }) => {
-    const dispatch:AppDispatch = useDispatch()
+const CreateNewTask = ({ reachStep }: { reachStep: (whichPage: number) => void }) => {
+    const dispatch: AppDispatch = useDispatch()
     const [task, setTask] = useState<TaskSchemaType>({ title: '', priority: 1, taskStatus: 'Pending', startTime: '', endTime: '' });
     const [loading, setLoading] = useState<boolean>(false);
     const handleSubmit = async (e) => {
@@ -28,7 +28,7 @@ const CreateNewTask = ({ startStep }: { startStep: () => void }) => {
             try {
                 await dispatch(createNewTask(isValid.data)).unwrap();
                 toast.success('New task Added');
-                startStep();
+                reachStep(0);
             } catch (err) {
                 const errorMessage =
                     (err as FetchResponseError).message ||
@@ -95,7 +95,7 @@ const CreateNewTask = ({ startStep }: { startStep: () => void }) => {
                                         variant={'secondary'}
                                         text={'cancel'}
                                         className='h-10'
-                                        onClick={startStep}
+                                        onClick={() => reachStep(0)}
                                     />
                                     <Button
                                         type={'submit'}

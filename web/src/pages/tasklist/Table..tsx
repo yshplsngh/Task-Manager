@@ -1,7 +1,8 @@
 import { SquarePen } from "lucide-react";
-import type { BTaskSchemaType } from "../../../app/task/types";
-import Button from "../../../ui/Button";
+import type { BTaskSchemaType } from "../../app/task/types";
+import Button from "../../ui/Button";
 import * as React from 'react';
+import dayjs from "dayjs";
 
 const Table = () => {
     const tabOptions = ['All', 'Finished', 'Pending']
@@ -41,6 +42,13 @@ const Table = () => {
         }];
 
     // It will return corresponding data to table head
+    const calculateDuration = (startTime: string, endTime: string) => {
+        const start = dayjs(startTime);
+        const end = dayjs(endTime);
+        const hours = Math.floor(end.diff(start, 'minute') / 60);
+        const minutes = end.diff(start, 'minute') % 60;
+        return `${hours}h ${minutes}m`;
+    }
     const getCellContent = (task: BTaskSchemaType, header: string) => {
         switch (header) {
             case 'Task ID':
@@ -54,12 +62,7 @@ const Table = () => {
             case 'End Time':
                 return task.endTime;
             case 'Task Duration':
-                // const start = dayjs(task.startTime);
-                // const end = dayjs(task.endTime);
-                // const hours = Math.floor(end.diff(start, 'minute') / 60);
-                // const minutes = end.diff(start, 'minute') % 60;
-                // return `${hours}h ${minutes}m`;
-                return '1m'
+                return calculateDuration(task.startTime, task.endTime)
             case 'Edit':
                 return (
                     <Button
@@ -67,7 +70,7 @@ const Table = () => {
                         variant={'outlineB'}
                         icon={<SquarePen className={'h-4 w-4'} />}
                         className={`hover:bg-accent rounded-xl w-fit border-none bg-transparent`}
-                    // onClick={() => navigate(`/space/edit/${spaceName}`)}
+                    // onClick={() => }
                     />
                 )
             default:
@@ -97,7 +100,7 @@ const Table = () => {
                             return (
                                 <tr key={task.id}>
                                     {tableHead.map((head) => (
-                                        <TableData data={getCellContent(task, head)} />
+                                        <TableData key={head} data={getCellContent(task, head)} />
                                     ))}
                                 </tr>
                             )
