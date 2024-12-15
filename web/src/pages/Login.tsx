@@ -20,6 +20,12 @@ const Login = () => {
     const user = useSelector(selectUser);
     const [credentials, setCredentials] = useState<AuthSchemaType>({ email: '', password: '' });
 
+    useEffect(() => {
+        if (user.email) {
+            return navigate('/dashboard')
+        }
+    }, [navigate, user])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = AuthSchema.safeParse(credentials)
@@ -44,11 +50,7 @@ const Login = () => {
         }
     };
 
-    useEffect(() => {
-        if (user.email) {
-            return navigate('/dashboard')
-        }
-    }, [navigate, user])
+
 
     return (
         <motion.div

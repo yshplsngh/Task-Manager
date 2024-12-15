@@ -26,7 +26,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
         // show black bg for all endpoints other than pickBG arrays one
         className={`${!pickBG.includes(location.pathname) ? 'bg-background-dark' : ''} flex justify-center`}
       >
-        <div className={'min-h-[45rem] w-[80rem]'}>{children}</div>
+        <div className={'h-full w-[80rem]'}>{children}</div>
       </div>
       <Toaster richColors closeButton duration={4000} />
     </>

@@ -10,30 +10,33 @@ import Toggle from "../../ui/Toggle"
 import { SquarePlus } from "lucide-react"
 import DateTime from "../../ui/DateTime"
 import type { Dayjs } from "dayjs"
+import type { FetchResponseError } from "../../utils/api"
+import { useDispatch } from "react-redux"
+import type { AppDispatch } from "../../app/store"
+import { createNewTask } from "../../app/task/taskSlice"
 
 const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startStep: () => void }) => {
-
+    const dispatch:AppDispatch = useDispatch()
     const [task, setTask] = useState<TaskSchemaType>({ title: '', priority: 1, taskStatus: 'Pending', startTime: '', endTime: '' });
-
+    const [loading, setLoading] = useState<boolean>(false);
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = TaskSchema.safeParse(task)
         if (isValid.success) {
             console.log(isValid.data)
-            // setLoading(true);
-            // try {
-            //     await dispatch(userLogin(isValid.data)).unwrap();
-            //     toast.success('Login successfully');
-            //     await dispatch(fetchUserInfo()).unwrap();
-            //     navigate('/dashboard');
-            // } catch (err) {
-            //     const errorMessage =
-            //         (err as FetchResponseError).message ||
-            //         'An error occurred while signing in.';
-            //     toast.error(errorMessage);
-            // } finally {
-            //     setLoading(false);
-            // }
+            setLoading(true);
+            try {
+                await dispatch(createNewTask(isValid.data)).unwrap();
+                toast.success('New task Added');
+                startStep();
+            } catch (err) {
+                const errorMessage =
+                    (err as FetchResponseError).message ||
+                    'An error occurred while signing in.';
+                toast.error(errorMessage);
+            } finally {
+                setLoading(false);
+            }
         } else {
             const errorMessages = zodErrorToString(isValid.error)
             toast.error(`Validation errors: ${errorMessages}`);
@@ -56,7 +59,7 @@ const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startSte
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, type: 'spring' }}
         >
-            <div className="flex h-screen items-center justify-center text-black">
+            <div className="flex mt-20 items-center justify-center text-black">
                 <div className="flex items-center justify-center">
                     <div className="w-[30rem] overflow-hidden rounded-2xl border-y border-gray-200 sm:border sm:shadow-xl">
                         <div className="bg-whitish flex flex-col justify-center space-y-3 border-b border-gray-200 px-4 py-6 pt-8 sm:px-10">
@@ -92,6 +95,7 @@ const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startSte
                                         variant={'secondary'}
                                         text={'cancel'}
                                         className='h-10'
+                                        onClick={prevStep}
                                     />
                                     <Button
                                         type={'submit'}
@@ -99,6 +103,7 @@ const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startSte
                                         text={'Add Task'}
                                         className='h-10'
                                         icon={<SquarePlus className={'h-4 w-4'} />}
+                                        loading={loading}
                                     />
                                 </div>
                             </form>
