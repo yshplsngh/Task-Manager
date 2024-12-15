@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 import { Input } from "../../ui/Input"
 import { Label } from "../../ui/Label"
 import Button from "../../ui/Button"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import { TaskSchema, type TaskSchemaType } from "../../app/task/types"
 import { zodErrorToString } from "../../utils/handleZodError"
 import { toast } from "sonner"
@@ -21,11 +21,11 @@ const CreateNewTask = () => {
     const [task, setTask] = useState<TaskSchemaType>({ title: '', priority: 1, taskStatus: 'Pending', startTime: '', endTime: '' });
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = TaskSchema.safeParse(task)
         if (isValid.success) {
-            console.log(isValid.data)
             setLoading(true);
             try {
                 await dispatch(createNewTask(isValid.data)).unwrap();
@@ -45,15 +45,15 @@ const CreateNewTask = () => {
         }
     };
 
-    const handleDateTimeChange = (startDateTime: Dayjs | null, endDateTime: Dayjs | null) => {
+    const handleDateTimeChange = useCallback((startDateTime: Dayjs | null, endDateTime: Dayjs | null) => {
         if (startDateTime && endDateTime) {
-            setTask({
-                ...task,
-                startTime: startDateTime.format('YYYY-MM-DD HH:mm:ss'),
-                endTime: endDateTime.format('YYYY-MM-DD HH:mm:ss')
-            });
+            setTask(prev => ({
+                ...prev,
+                startTime: startDateTime.toISOString(),
+                endTime: endDateTime.toISOString()
+            }));
         }
-    }
+    }, []);
 
     return (
         <motion.div
@@ -76,16 +76,16 @@ const CreateNewTask = () => {
                             <form onSubmit={handleSubmit} className='space-y-5'>
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Title</Label>
-                                    <Input id="title" type="text" name="title" required onChange={(e) => setTask({ ...task, title: e.target.value })} />
+                                    <Input id="title" type="text" name="title" value={task.title} required onChange={(e) => setTask({ ...task, title: e.target.value })} />
                                 </div>
                                 <div className="flex items-center justify-between w-full">
                                     <div className="w-1/3 space-y-2">
                                         <Label htmlFor="priority">Priority</Label>
-                                        <Input id="priority" type="number" name="priority" min={1} max={5} defaultValue={task.priority} required onChange={(e) => setTask({ ...task, priority: +e.target.value })} />
+                                        <Input id="priority" type="number" name="priority" min={1} max={5} value={task.priority} required onChange={(e) => setTask({ ...task, priority: +e.target.value })} />
                                     </div>
                                     <div className="flex flex-col space-y-2">
                                         <Label htmlFor="switch-component-on">Status</Label>
-                                        <Toggle onChange={() => setTask({ ...task, taskStatus: task.taskStatus === 'Pending' ? 'Finished' : 'Pending' })} />
+                                        <Toggle checked={task.taskStatus === "Finished" ? true : false} onChange={() => setTask({ ...task, taskStatus: task.taskStatus === 'Pending' ? 'Finished' : 'Pending' })} />
                                     </div>
                                 </div>
                                 <div className="space-y-2">

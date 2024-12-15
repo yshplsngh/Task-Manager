@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -7,22 +7,26 @@ import dayjs, { Dayjs } from 'dayjs';
 
 interface DateTimeSelectionProps {
     onDateTimeChange: (startDate: Dayjs | null, endDate: Dayjs | null) => void;
-    initialStartDate?: Dayjs;
-    initialEndDate?: Dayjs;
+    initialStartDate?: string;
+    initialEndDate?: string;
 }
 
-export default function DateTime({
+function DateTime({
     onDateTimeChange,
-    initialStartDate = dayjs(),
-    initialEndDate = dayjs().add(1, 'hour')
+    initialStartDate = dayjs().toISOString(),
+    initialEndDate = dayjs().add(1, 'hour').toISOString()
 }: DateTimeSelectionProps) {
+    console.log('ck')
+    const [startDateTime, setStartDateTime] = useState<Dayjs | null>(
+        initialStartDate ? dayjs(initialStartDate) : null
+    );
+    const [endDateTime, setEndDateTime] = useState<Dayjs | null>(
+        initialEndDate ? dayjs(initialEndDate) : null
+    );
 
-    const [startDateTime, setStartDateTime] = useState<Dayjs | null>(initialStartDate);
-    const [endDateTime, setEndDateTime] = useState<Dayjs | null>(initialEndDate);
-
-    useEffect(()=>{
-        onDateTimeChange(startDateTime,endDateTime);
-    },[startDateTime,endDateTime,onDateTimeChange])
+    useEffect(() => {
+        onDateTimeChange(startDateTime, endDateTime);
+    }, [startDateTime, endDateTime])
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -34,7 +38,7 @@ export default function DateTime({
                 >
                     <DateTimePicker
                         value={startDateTime}
-                        onChange={(newValue)=>setStartDateTime(newValue)}
+                        onChange={(newValue) => setStartDateTime(newValue)}
                         slotProps={{
                             textField: {
                                 fullWidth: true,
@@ -59,7 +63,7 @@ export default function DateTime({
 
                     <DateTimePicker
                         value={endDateTime}
-                        onChange={(newValue)=>setEndDateTime(newValue)}
+                        onChange={(newValue) => setEndDateTime(newValue)}
                         slotProps={{
                             textField: {
                                 fullWidth: true,
@@ -86,3 +90,4 @@ export default function DateTime({
         </LocalizationProvider>
     );
 }
+export default memo(DateTime)

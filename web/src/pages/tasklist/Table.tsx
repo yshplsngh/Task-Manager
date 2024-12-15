@@ -10,7 +10,7 @@ import { selectAllTask } from "../../app/task/taskSlice";
 const Table = () => {
     const navigate = useNavigate();
     const tabOptions = ['All', 'Finished', 'Pending']
-    const tableHead = ['Task ID', 'Title','Task Status', 'Priority', 'Start Time', 'End Time', 'Task Duration', 'Edit']
+    const tableHead = ['Task ID', 'Title', 'Task Status', 'Priority', 'Start Time', 'End Time', 'Task Duration', 'Edit']
 
     // It will return corresponding data to table head
     const allTask = useSelector(selectAllTask)
@@ -19,7 +19,9 @@ const Table = () => {
         const end = dayjs(endTime);
         const hours = Math.floor(end.diff(start, 'minute') / 60);
         const minutes = end.diff(start, 'minute') % 60;
-        return `${hours}h ${minutes}m`;
+        const hourStr = hours > 0 ? `${hours} h` : ''
+        const minStr = minutes !== 0 ? `${minutes} m` : ''
+        return `${hourStr} ${hourStr.length > 0 && minStr.length > 0 ? ' : ' : ''} ${minStr}`;
     }
     const getCellContent = (task: BTaskSchemaType, header: string) => {
         switch (header) {

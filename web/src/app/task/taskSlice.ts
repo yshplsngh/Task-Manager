@@ -19,6 +19,13 @@ export const createNewTask = createAsyncThunk(
     return api.post(url, data);
   },
 );
+export const updateTask = createAsyncThunk(
+  '/api/task/edit',
+  async (data: BTaskSchemaType) => {
+    const url = '/api/task/edit';
+    return api.post<BTaskSchemaType>(url, data);
+  },
+);
 export const getTask = createAsyncThunk('/api/task/get', async () => {
   const url = '/api/task/get';
   return api.get<BTaskSchemaType[]>(url);
@@ -51,11 +58,19 @@ const taskSlice = createSlice({
         (state, action: PayloadAction<ProcessedResponse<BTaskSchemaType>>) => {
           taskAdapter.upsertOne(state, action.payload.json);
         },
-      );
+      )
+      .addCase(
+        updateTask.fulfilled,(state,action:PayloadAction<ProcessedResponse<BTaskSchemaType>>) => {
+          taskAdapter.updateOne(state, {
+            id: action.payload.json.id,
+            changes: action.payload.json,
+          });
+        }
+      )
   },
 });
 
-export const { selectAll: selectAllTask, selectById: selectTaskById } =
+export const { selectAll: selectAllTask, selectById: selectTaskById,selectIds:selectTaskIds } =
   taskAdapter.getSelectors((state: RootState) => state.task);
 
 export default taskSlice.reducer;

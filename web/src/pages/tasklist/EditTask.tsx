@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 import { Input } from "../../ui/Input"
 import { Label } from "../../ui/Label"
 import Button from "../../ui/Button"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { TaskSchema, type TaskSchemaType } from "../../app/task/types"
 import { zodErrorToString } from "../../utils/handleZodError"
 import { toast } from "sonner"
@@ -13,10 +13,9 @@ import type { Dayjs } from "dayjs"
 import type { FetchResponseError } from "../../utils/api"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "../../app/store"
-import { createNewTask, selectTaskById, getSingleTask } from "../../app/task/taskSlice"
+import { selectTaskById, getSingleTask, updateTask } from "../../app/task/taskSlice"
 import { useNavigate, useParams } from "react-router"
 import LoLoadingSpinner from "../../ui/LoLoadingSpinner"
-import dayjs from "dayjs"
 
 const EditTask = () => {
     const dispatch: AppDispatch = useDispatch()
@@ -50,7 +49,6 @@ const EditTask = () => {
     }, [dispatch, taskId, singleTask])
 
     useEffect(() => {
-        console.log(singleTask);
         if (singleTask) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { id, ...taskWOID } = singleTask;
@@ -62,11 +60,10 @@ const EditTask = () => {
         e.preventDefault();
         const isValid = TaskSchema.safeParse(task)
         if (isValid.success) {
-            console.log(isValid.data)
             setEditLoading(true);
             try {
-                await dispatch(createNewTask(isValid.data)).unwrap();
-                toast.success('Task Editted');
+                await dispatch(updateTask({ ...isValid.data, id: Number(taskId) })).unwrap();
+                toast.success('Task Edited');
                 navigate('/tasklist')
             } catch (err) {
                 const errorMessage =
@@ -82,15 +79,15 @@ const EditTask = () => {
         }
     };
 
-    const handleDateTimeChange = (startDateTime: Dayjs | null, endDateTime: Dayjs | null) => {
+    const handleDateTimeChange = useCallback((startDateTime: Dayjs | null, endDateTime: Dayjs | null) => {
         if (startDateTime && endDateTime) {
-            setTask({
-                ...task,
-                startTime: startDateTime.format('YYYY-MM-DD HH:mm:ss'),
-                endTime: endDateTime.format('YYYY-MM-DD HH:mm:ss')
-            });
+            setTask(prev => ({
+                ...prev,
+                startTime: startDateTime.toISOString(),
+                endTime: endDateTime.toISOString()
+            }));
         }
-    }
+    }, []);
 
     return !loading ? (
         <motion.div
@@ -129,7 +126,13 @@ const EditTask = () => {
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <DateTime initialStartDate={dayjs(task.startTime)} initialEndDate={dayjs(task.endTime)} onDateTimeChange={handleDateTimeChange} />
+                                    {task.startTime && task.endTime && (
+                                        <DateTime
+                                            initialStartDate={task.startTime}
+                                            initialEndDate={task.endTime}
+                                            onDateTimeChange={handleDateTimeChange}
+                                        />
+                                    )}
                                 </div>
                                 <div className="flex space-x-3 pt-5">
                                     <Button
@@ -142,7 +145,7 @@ const EditTask = () => {
                                     <Button
                                         type={'submit'}
                                         variant={'secondary'}
-                                        text={'Add Task'}
+                                        text={'Edit Task'}
                                         className='h-10'
                                         icon={<SquarePlus className={'h-4 w-4'} />}
                                         loading={editLoading}

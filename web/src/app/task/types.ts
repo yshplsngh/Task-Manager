@@ -1,20 +1,31 @@
+import dayjs from 'dayjs';
 import { z } from 'zod';
 
-export const TaskSchema = z.object({
-  title: z.string().trim().min(1).max(500),
-  priority: z.number().min(1).max(5),
-  taskStatus: z
-    .string()
-    .refine((status) => status === 'Finished' || status === 'Pending', {
-      message: "Status must be either 'finished' or 'pending'",
-    }),
-  startTime: z.string(),
-  endTime: z.string(),
-});
+export const TaskSchema = z
+  .object({
+    title: z.string().trim().min(1).max(500),
+    priority: z.number().min(1).max(5),
+    taskStatus: z
+      .string()
+      .refine((status) => status === 'Finished' || status === 'Pending', {
+        message: "Status must be either 'finished' or 'pending'",
+      }),
+    startTime: z.string(),
+    endTime: z.string(),
+  })
+  .refine(
+    (data) => {
+      return dayjs(data.endTime).isAfter(dayjs(data.startTime));
+    },
+    {
+      message: 'End time must be after start time',
+      path: ['endTime'],
+    },
+  );
 
 export type TaskSchemaType = z.infer<typeof TaskSchema>;
 
-export interface BTaskSchemaType {
+export type BTaskSchemaType = {
   title: string;
   priority: number;
   taskStatus: 'Pending' | 'Finished';

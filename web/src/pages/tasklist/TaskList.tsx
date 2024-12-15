@@ -6,31 +6,32 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import LoLoadingSpinner from "../../ui/LoLoadingSpinner";
 import type { AppDispatch } from "../../app/store";
-import { useDispatch } from "react-redux";
-import { getTask } from "../../app/task/taskSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getTask, selectTaskIds } from "../../app/task/taskSlice";
 import type { FetchResponseError } from "../../utils/api";
 import { toast } from "sonner";
 
 const TaskList = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
-    const dispatch:AppDispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
+    const taskIds = useSelector(selectTaskIds)
 
     useEffect(() => {
         async function fetchTask() {
             setLoading(true);
             try {
                 await dispatch(getTask()).unwrap();
-              } catch (err) {
+            } catch (err) {
                 const errorMessage =
-                  (err as FetchResponseError).message ||
-                  'An error occurred while fetching spaces';
+                    (err as FetchResponseError).message ||
+                    'An error occurred while fetching spaces';
                 toast.error(errorMessage);
-              }
+            }
         }
         fetchTask().then(() => setLoading(false))
     }, [dispatch])
-    
+
 
     return !loading ? (
         <motion.div
@@ -56,7 +57,22 @@ const TaskList = () => {
                 </div>
                 <hr className={'border-accent'} />
                 <div className={'mt-10 flex flex-col items-center justify-center transition-all'}>
-                    <Table />
+                    {taskIds && taskIds.length>0 ? (
+                        <Table />
+                    ) :
+                        (
+                            <div className="w-fit space-y-3">
+                                <div className="w-full text-center">No Tasks found !</div>
+                                <Button
+                                    type={'button'}
+                                    variant={'secondary'}
+                                    text={`Add New Task`}
+                                    icon={<SquarePlus className={'h-4 w-4'} />}
+                                    onClick={() => navigate('/tasklist/new')}
+                                    className={'max-w-fit'}
+                                />
+                            </div>
+                        )}
                 </div>
             </div>
         </motion.div>
