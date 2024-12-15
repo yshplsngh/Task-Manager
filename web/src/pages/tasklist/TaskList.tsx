@@ -1,11 +1,38 @@
 import { motion } from "framer-motion";
 import { LayoutDashboard, SquarePlus } from "lucide-react";
 import Button from "../../ui/Button";
-import Table from "./Table.";
+import Table from "./Table";
+import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import LoLoadingSpinner from "../../ui/LoLoadingSpinner";
+import type { AppDispatch } from "../../app/store";
+import { useDispatch } from "react-redux";
+import { getTask } from "../../app/task/taskSlice";
+import type { FetchResponseError } from "../../utils/api";
+import { toast } from "sonner";
 
-const TaskList = ({ reachStep }: { reachStep: (whichPage:number) => void }) => {
+const TaskList = () => {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState<boolean>(false);
+    const dispatch:AppDispatch = useDispatch();
 
-    return (
+    useEffect(() => {
+        async function fetchTask() {
+            setLoading(true);
+            try {
+                await dispatch(getTask()).unwrap();
+              } catch (err) {
+                const errorMessage =
+                  (err as FetchResponseError).message ||
+                  'An error occurred while fetching spaces';
+                toast.error(errorMessage);
+              }
+        }
+        fetchTask().then(() => setLoading(false))
+    }, [dispatch])
+    
+
+    return !loading ? (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -23,16 +50,18 @@ const TaskList = ({ reachStep }: { reachStep: (whichPage:number) => void }) => {
                         variant={'secondary'}
                         text={`Add New Task`}
                         icon={<SquarePlus className={'h-4 w-4'} />}
-                        onClick={() => reachStep(1)}
+                        onClick={() => navigate('/tasklist/new')}
                         className={'max-w-fit'}
                     />
                 </div>
                 <hr className={'border-accent'} />
                 <div className={'mt-10 flex flex-col items-center justify-center transition-all'}>
-                    <Table/>
+                    <Table />
                 </div>
             </div>
         </motion.div>
+    ) : (
+        <LoLoadingSpinner />
     )
 }
 export default TaskList

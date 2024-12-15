@@ -14,11 +14,13 @@ import type { FetchResponseError } from "../../utils/api"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../../app/store"
 import { createNewTask } from "../../app/task/taskSlice"
+import { useNavigate } from "react-router"
 
-const CreateNewTask = ({ reachStep }: { reachStep: (whichPage: number) => void }) => {
+const CreateNewTask = () => {
     const dispatch: AppDispatch = useDispatch()
     const [task, setTask] = useState<TaskSchemaType>({ title: '', priority: 1, taskStatus: 'Pending', startTime: '', endTime: '' });
     const [loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isValid = TaskSchema.safeParse(task)
@@ -28,11 +30,11 @@ const CreateNewTask = ({ reachStep }: { reachStep: (whichPage: number) => void }
             try {
                 await dispatch(createNewTask(isValid.data)).unwrap();
                 toast.success('New task Added');
-                reachStep(0);
+                navigate('/tasklist')
             } catch (err) {
                 const errorMessage =
                     (err as FetchResponseError).message ||
-                    'An error occurred while signing in.';
+                    'An error occurred while creating task';
                 toast.error(errorMessage);
             } finally {
                 setLoading(false);
@@ -55,7 +57,7 @@ const CreateNewTask = ({ reachStep }: { reachStep: (whichPage: number) => void }
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, type: 'spring' }}
         >
@@ -83,19 +85,19 @@ const CreateNewTask = ({ reachStep }: { reachStep: (whichPage: number) => void }
                                     </div>
                                     <div className="flex flex-col space-y-2">
                                         <Label htmlFor="switch-component-on">Status</Label>
-                                        <Toggle onClick={() => setTask({ ...task, taskStatus: task.taskStatus === 'Pending' ? 'Finished' : 'Pending' })} />
+                                        <Toggle onChange={() => setTask({ ...task, taskStatus: task.taskStatus === 'Pending' ? 'Finished' : 'Pending' })} />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <DateTime onDateTimeChange={handleDateTimeChange} />
                                 </div>
-                                <div className="flex space-x-3 pt-10">
+                                <div className="flex space-x-3 pt-5">
                                     <Button
                                         type={'button'}
                                         variant={'secondary'}
                                         text={'cancel'}
                                         className='h-10'
-                                        onClick={() => reachStep(0)}
+                                        onClick={() => navigate('/tasklist')}
                                     />
                                     <Button
                                         type={'submit'}

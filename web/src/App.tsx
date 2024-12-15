@@ -9,7 +9,9 @@ import Login from './pages/Login';
 import Layout from './utils/Layout';
 import ProtectedRoute from './utils/ProtectedRoute'
 import Dashboard from './pages/dashboard/Dashboard';
-import ManageTaskList from './pages/tasklist/ManageTaskList';
+import CreateNewTask from './pages/tasklist/CreateNewTask';
+import TaskList from './pages/tasklist/TaskList';
+import EditTask from './pages/tasklist/EditTask';
 
 export default function App(): ReactElement {
   return (
@@ -22,9 +24,11 @@ export default function App(): ReactElement {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/tasklist" element={<ManageTaskList/>} />
+              <Route path="/tasklist" element={<TaskList />} />
+              <Route path="/tasklist/new" element={<CreateNewTask />} />
+              <Route path='/tasklist/edit/:taskId' element={<EditTask />} />
             </Route>
-            
+
             <Route path={'*'} element={<NotFound />} />
             <Route path={'/error'} element={<NotFound />} />
           </Routes>
