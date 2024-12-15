@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { LayoutDashboard, SquarePlus } from "lucide-react";
 import Button from "../../ui/Button";
+import Table from "./compoenent/Table.";
 
 const TaskList = ({ nextStep }: { nextStep: () => void }) => {
 
@@ -27,12 +28,8 @@ const TaskList = ({ nextStep }: { nextStep: () => void }) => {
                     />
                 </div>
                 <hr className={'border-accent'} />
-                <div
-                    className={
-                        'mt-10 flex flex-col items-center justify-center transition-all'
-                    }
-                >
-                    hello
+                <div className={'mt-10 flex flex-col items-center justify-center transition-all'}>
+                    <Table/>
                 </div>
             </div>
         </motion.div>

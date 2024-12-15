@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const TaskSchema = z.object({
-  title: z.string().trim().min(1),
+  title: z.string().trim().min(1).max(500),
   priority: z.number().min(1).max(5),
   taskStatus: z
     .string()
@@ -21,7 +21,4 @@ export interface BTaskSchemaType {
   startTime: string;
   endTime: string;
   id: number;
-  userId: number;
-  createdAt: Date;
-  updatedAt: Date;
 }

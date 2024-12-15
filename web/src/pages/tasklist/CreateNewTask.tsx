@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../../app/store"
 import { createNewTask } from "../../app/task/taskSlice"
 
-const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startStep: () => void }) => {
+const CreateNewTask = ({ startStep }: { startStep: () => void }) => {
     const dispatch:AppDispatch = useDispatch()
     const [task, setTask] = useState<TaskSchemaType>({ title: '', priority: 1, taskStatus: 'Pending', startTime: '', endTime: '' });
     const [loading, setLoading] = useState<boolean>(false);
@@ -95,7 +95,7 @@ const CreateNewTask = ({ prevStep, startStep }: { prevStep: () => void, startSte
                                         variant={'secondary'}
                                         text={'cancel'}
                                         className='h-10'
-                                        onClick={prevStep}
+                                        onClick={startStep}
                                     />
                                     <Button
                                         type={'submit'}

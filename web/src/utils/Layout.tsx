@@ -9,7 +9,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const location = useLocation();
   const omitHeader = ['/login'];
   const pickBG = ['/', '/login'];
-  console.log(location.pathname)
+  
   const shouldOmitHeader = () => {
     return omitHeader.some((path) => location.pathname === path);
   };

@@ -8,7 +8,7 @@ export interface UserData {
 }
 
 export const AuthSchema = z.object({
-  email:z.string().email().toLowerCase().trim(),
+  email:z.string().email().toLowerCase().trim().max(100),
   password: z.string().trim().min(3).max(20),
 })
 

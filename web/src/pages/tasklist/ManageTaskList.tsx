@@ -3,11 +3,13 @@ import CreateNewTask from "./CreateNewTask";
 import TaskList from "./TaskList";
 
 const ManageTaskList = () => {
-    const { step, startStep, nextStep, prevStep } = useSteps();
+
+    // hre update 
+    const { step, startStep, nextStep } = useSteps(2);
 
     const steps = [
         <TaskList key={'taskList'} nextStep={nextStep} />,
-        <CreateNewTask key={'createNewTask'} prevStep={prevStep} startStep={startStep} />
+        <CreateNewTask key={'createNewTask'} startStep={startStep} />
     ]
 
     return steps[step]
