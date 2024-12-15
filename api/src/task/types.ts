@@ -10,4 +10,6 @@ export const TaskSchema = z.object({
   endTime: z.string()
 });
 
-export type TaskSchemaType = z.infer<typeof TaskSchema>;
+export const TaskWithIdSchema = TaskSchema.extend({
+  id: z.number().int().positive()
+})

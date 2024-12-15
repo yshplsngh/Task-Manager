@@ -1,6 +1,6 @@
 import type { Express, Request, Response, NextFunction } from 'express';
 import requireUser from '../utils/middleware/requireUser';
-import { TaskSchema } from './types';
+import { TaskSchema, TaskWithIdSchema } from './types';
 import prisma from '../database';
 import { createError } from '../utils/middleware/errorHandling';
 
@@ -72,4 +72,40 @@ export default function (app: Express) {
       return res.status(200).json(task);
     },
   );
+
+  app.post(
+    '/api/task/edit',
+    requireUser,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const parsedResult = TaskWithIdSchema.safeParse(req.body);
+      if (!parsedResult.success) {
+        next(parsedResult.error);
+        return;
+      }
+
+      const task = await prisma.task.update({
+        where: {
+          userId: res.locals.user.id,
+          id: parsedResult.data.id
+        },
+        data:{
+          title: parsedResult.data.title,
+          priority: parsedResult.data.priority,
+          taskStatus: parsedResult.data.taskStatus,
+          startTime: parsedResult.data.startTime,
+          endTime: parsedResult.data.endTime,
+        },
+        select: {
+          id: true,
+          title: true,
+          priority: true,
+          taskStatus: true,
+          startTime: true,
+          endTime: true,
+        },
+      });
+      return res.status(200).json(task);
+    },
+  );
+
 }
