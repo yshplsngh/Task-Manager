@@ -34,10 +34,11 @@ export type BTaskSchemaType = {
   id: number;
 };
 
-type TaskAnalytics = {
+export type StatsType = {
+  priority:number;
   pendingTasks: number;
-  taskTimeInMin: number;
   remainingTimeInMin: number;
+  taskTimeInMin: number;
 };
 
 export type BRawDataType = {
@@ -48,5 +49,5 @@ export type BRawDataType = {
   pendingTasks: number;
   totalTimeLapsed: number;
   totalTimeToFinish: number;
-  tableData: Record<number, TaskAnalytics>;
+  tableData: Record<number, StatsType>;
 };

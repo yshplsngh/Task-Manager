@@ -115,7 +115,7 @@ export default function (app: Express) {
     async (req: Request, res: Response) => {
       const task = await prisma.task.findMany({
         where: {
-          userId: 89,
+          userId: res.locals.user.id,
         },
         select: {
           id: true,
@@ -123,16 +123,9 @@ export default function (app: Express) {
           taskStatus: true,
           startTime: true,
           endTime: true,
-        },
+        }
       });
       const taskLen = task.length;
-
-      const taskCompleted = task.reduce(
-        (count, task) => (task.taskStatus === 'Finished' ? count + 1 : count),
-        0,
-      );
-      const taskCompletedPer =
-        taskLen === 0 ? 0 : Math.round((taskCompleted * 100) / taskLen);
 
       const calculateDuration = (startTime: string, endTime: string) => {
         const start = dayjs(startTime);
@@ -146,6 +139,7 @@ export default function (app: Express) {
       let calTotalTimeToFinish = 0;
 
       type TaskAnalytics = {
+        priority:number;
         pendingTasks: number;
         taskTimeInMin: number;
         remainingTimeInMin: number;
@@ -154,21 +148,22 @@ export default function (app: Express) {
       const tableStats = task.reduce(
         (acc: Record<number, TaskAnalytics>, task) => {
           // from 1 to 5
-          const priority = task.priority;
+          const taskPriority = task.priority;
 
-          if (!acc[priority]) {
-            acc[priority] = {
+          if (!acc[taskPriority]) {
+            acc[taskPriority] = {
+              priority: taskPriority,
               pendingTasks: 0,
-              taskTimeInMin: 0,
               remainingTimeInMin: 0,
+              taskTimeInMin: 0,
             };
           }
 
           if (task.taskStatus === 'Pending') {
-            acc[priority].pendingTasks++;
+            acc[taskPriority].pendingTasks++;
             calPendingTasks++;
 
-            acc[priority].taskTimeInMin += calculateDuration(
+            acc[taskPriority].taskTimeInMin += calculateDuration(
               task.startTime,
               task.endTime,
             );
@@ -178,7 +173,7 @@ export default function (app: Express) {
             );
 
             // here we calculating remaining time, so need to give current time in ISOstring
-            acc[priority].remainingTimeInMin += calculateDuration(
+            acc[taskPriority].remainingTimeInMin += calculateDuration(
               dayjs().toISOString(),
               task.endTime,
             );
@@ -193,11 +188,14 @@ export default function (app: Express) {
         {} as Record<number, TaskAnalytics>, // initial value of acc
       );
       
+
+      const calTasksPendingPer = Math.round((calPendingTasks*100) / taskLen)
+
       const response = {
         totalTask: task.length,
-        tasksCompleted: taskCompletedPer,
-        tasksPending: taskCompletedPer === 0 ? 0 : 100 - taskCompletedPer,
-        averageTimePerTask: (calTotalTimeLapsed / calPendingTasks) || 0,
+        tasksCompleted: calTasksPendingPer === 0 ? 0 : 100 - calTasksPendingPer,
+        tasksPending: calTasksPendingPer,
+        averageTimePerTask: Math.round(calTotalTimeLapsed / calPendingTasks) || 0,
         pendingTasks: calPendingTasks,
         totalTimeLapsed: calTotalTimeLapsed,
         totalTimeToFinish: calTotalTimeToFinish,

@@ -23,6 +23,7 @@ const Table = () => {
         const minStr = minutes !== 0 ? `${minutes} m` : ''
         return `${hourStr} ${hourStr.length > 0 && minStr.length > 0 ? ' : ' : ''} ${minStr}`;
     }
+    
     const getCellContent = (task: BTaskSchemaType, header: string) => {
         switch (header) {
             case 'Task ID':
@@ -53,6 +54,7 @@ const Table = () => {
                 return '';
         }
     };
+
     return (
         <div className="relative flex flex-col w-full h-full text-whitish bg-transparent border-2 border-accent overflow-hidden shadow-md rounded-xl bg-clip-border">
             <div className="relative mx-4 mt-4 overflow-hidden text-whitish bg-transparent rounded-none bg-clip-border">
@@ -102,7 +104,7 @@ const TableButton = ({ name }: { name: string }) => {
     )
 }
 
-const TableHead = ({ name }: { name: string }) => {
+export const TableHead = ({ name }: { name: string }) => {
     return (
         <th
             className="p-4 transition-colors border-y border-accent bg-blue-gray-50/50 hover:bg-blue-gray-50">
@@ -113,7 +115,7 @@ const TableHead = ({ name }: { name: string }) => {
         </th>
     )
 }
-const TableData = ({ data }: { data: string | number | React.ReactElement }) => {
+export const TableData = ({ data }: { data: string | number | React.ReactElement }) => {
     return (
         <td className="p-4 border-b border-accent">
             <p className="block font-sans text-md antialiased font-normal leading-normal text-blue-gray-900">
