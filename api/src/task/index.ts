@@ -150,16 +150,17 @@ export default function (app: Express) {
           // from 1 to 5
           const taskPriority = task.priority;
 
-          if (!acc[taskPriority]) {
-            acc[taskPriority] = {
-              priority: taskPriority,
-              pendingTasks: 0,
-              remainingTimeInMin: 0,
-              taskTimeInMin: 0,
-            };
-          }
-
           if (task.taskStatus === 'Pending') {
+
+            if (!acc[taskPriority]) {
+              acc[taskPriority] = {
+                priority: taskPriority,
+                pendingTasks: 0,
+                remainingTimeInMin: 0,
+                taskTimeInMin: 0,
+              };
+            }
+
             acc[taskPriority].pendingTasks++;
             calPendingTasks++;
 
@@ -189,12 +190,12 @@ export default function (app: Express) {
       );
       
 
-      const calTasksPendingPer = Math.round((calPendingTasks*100) / taskLen)
+      const calTasksPendingPer = Math.round((calPendingTasks*100) / taskLen) || 0
 
       const response = {
         totalTask: task.length,
         tasksCompleted: calTasksPendingPer === 0 ? 0 : 100 - calTasksPendingPer,
-        tasksPending: calTasksPendingPer,
+        tasksPending: calTasksPendingPer || 0,
         averageTimePerTask: Math.round(calTotalTimeLapsed / calPendingTasks) || 0,
         pendingTasks: calPendingTasks,
         totalTimeLapsed: calTotalTimeLapsed,
