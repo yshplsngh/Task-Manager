@@ -23,7 +23,7 @@ function Header() {
 
   const loginBtn = (
     <Link to="/login">
-      <Button type={'button'} variant={'outlineB'} text={'Sign in'} />
+      <Button type={'button'} variant={'outlineB'} text={'Sign in'} className="border-green-400 border text-white bg-gradient-to-br from-green-500 to-green-800  px-3 py-1 rounded-md w-fit mx-auto" />
     </Link>
   );
 

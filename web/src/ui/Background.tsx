@@ -21,7 +21,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     padding: '120px 24px 160px 24px',
     // pointerEvents: "none",
-    backgroundColor: '#1c1c1c', // Black background
+    backgroundColor: '#0d1117', // Black background
   },
   backgroundMainBefore: {
     background: 'radial-gradient(circle, rgba(0, 0, 0, 0) 0, #1c1c1c 100%)', // Black gradient
@@ -55,18 +55,12 @@ const styles: { [key: string]: React.CSSProperties } = {
   backgroundContent: {
     zIndex: 3,
     width: '100%',
-    maxWidth: '800px',
-    backgroundImage: `radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 1) 0px, transparent 0%),
-                      radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 1) 0px, transparent 90%),
-                      radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 1) 0px, transparent 90%),
-                      radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 1) 0px, transparent 90%),
-                      radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 1) 0px, transparent 90%),
-                      radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 1) 0px, transparent 90%),
-                      radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 1) 0px, transparent 90%)`,
+    maxWidth: '400px',
+    backgroundImage: `linear-gradient(to bottom right, rgb(34 197 94 / 1), rgb(22, 101, 52))`,
     position: 'absolute',
-    height: '100%',
-    filter: 'blur(100px) saturate(90%)',
+    height: '400px',
+    filter: 'blur(100px)',
     // top: "80px",
-    opacity: 0.05,
+    opacity: 0.3,
   },
 };

@@ -19,12 +19,12 @@ const TaskList = () => {
     const dispatch: AppDispatch = useDispatch();
     const [allTask, setAllTask] = useState<BTaskSchemaType[]>();
     const [activeStatusFilter, setActiveStatusFilter] = useState<TaskStatus>('All');
-    console.log('tl')
+
     useEffect(() => {
         async function fetchTask() {
             setLoading(true);
             try {
-                const data = await dispatch(getTask({status:activeStatusFilter})).unwrap();
+                const data = await dispatch(getTask({ status: activeStatusFilter })).unwrap();
                 setAllTask(data.json)
             } catch (err) {
                 const errorMessage =
@@ -34,13 +34,13 @@ const TaskList = () => {
             }
         }
         fetchTask().then(() => setLoading(false))
-    }, [dispatch,activeStatusFilter])
+    }, [dispatch, activeStatusFilter])
 
 
     return !loading ? (
         <motion.div
-            initial={{ opacity: 0}}
-            animate={{ opacity: 1}}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5, type: 'tween' }}
         >
             <div className="w-full">
@@ -60,27 +60,12 @@ const TaskList = () => {
                 </div>
                 <hr className={'border-accent'} />
                 <div className={'mt-10 flex flex-col items-center justify-center transition-all'}>
-                    {allTask && allTask.length > 0 ? (
-                        <Table
-                            allTask={allTask}
-                            statusFilter={STATUS_FILTERS}
-                            activeStatusFilter={activeStatusFilter}
-                            setActiveStatusFilter={setActiveStatusFilter}
-                        />
-                    ) :
-                        (
-                            <div className="w-fit space-y-3">
-                                <div className="w-full text-center">No Tasks found !</div>
-                                <Button
-                                    type={'button'}
-                                    variant={'secondary'}
-                                    text={`Add New Task`}
-                                    icon={<SquarePlus className={'h-4 w-4'} />}
-                                    onClick={() => navigate('/tasklist/new')}
-                                    className={'max-w-fit'}
-                                />
-                            </div>
-                        )}
+                    <Table
+                        allTask={allTask}
+                        statusFilter={STATUS_FILTERS}
+                        activeStatusFilter={activeStatusFilter}
+                        setActiveStatusFilter={setActiveStatusFilter}
+                    />
                 </div>
             </div>
         </motion.div>

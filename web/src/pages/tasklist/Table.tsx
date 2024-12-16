@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { STATUS_FILTERS, type TaskStatus } from "../../app/task/types";
 
 interface TableProps {
-    allTask: BTaskSchemaType[];
+    allTask?: BTaskSchemaType[];
     statusFilter: typeof STATUS_FILTERS;
     activeStatusFilter: TaskStatus;
     setActiveStatusFilter: (status: TaskStatus) => void;
@@ -15,7 +15,6 @@ interface TableProps {
 
 const Table = ({ allTask, statusFilter, activeStatusFilter, setActiveStatusFilter }: TableProps) => {
     const navigate = useNavigate();
-    console.log('table')
     const tableHead = ['Task ID', 'Title', 'Task Status', 'Priority', 'Start Time', 'End Time', 'Task Duration', 'Edit']
 
     // It will return corresponding data to table head
@@ -61,8 +60,8 @@ const Table = ({ allTask, statusFilter, activeStatusFilter, setActiveStatusFilte
     };
 
     return (
-        <div className="relative flex flex-col w-full h-full text-whitish bg-transparent border-2 border-accent overflow-hidden shadow-md rounded-xl bg-clip-border">
-            <div className="relative mx-4 mt-4 overflow-hidden text-whitish bg-transparent rounded-none bg-clip-border">
+        <div className="relative flex py-10 space-y-5 flex-col w-full h-full text-whitish bg-transparent border-2 border-accent overflow-hidden shadow-md rounded-xl bg-clip-border">
+            <div className="px-4 relative overflow-hidden text-whitish bg-transparent rounded-none bg-clip-border">
                 <div className="block w-full overflow-hidden md:w-max">
                     <nav>
                         <ul role="tablist" className="relative flex flex-row p-1 space-x-3 rounded-lg bg-blue-gray-50 bg-opacity-60">
@@ -72,16 +71,16 @@ const Table = ({ allTask, statusFilter, activeStatusFilter, setActiveStatusFilte
                 </div>
             </div>
             <div className="px-0 overflow-scroll">
-                <table className="w-full mt-4 text-left table-auto min-w-max">
+                <table className="w-full text-left table-auto min-w-max">
                     <thead className="bg-third-dark">
                         <tr>
                             {tableHead.map((head, index) => <TableHead key={index} name={head} />)}
                         </tr>
                     </thead>
                     <tbody>
-                        {allTask.map((task) => {
+                        {allTask && allTask.map((task) => {
                             return (
-                                <tr key={task.id}>
+                                <tr key={task.id} className="even:bg-accent/20">
                                     {tableHead.map((head) => (
                                         <TableData key={head} data={getCellContent(task, head)} />
                                     ))}

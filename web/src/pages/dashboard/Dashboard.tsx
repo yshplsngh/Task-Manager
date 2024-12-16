@@ -48,9 +48,9 @@ const Dashboard = () => {
             case 'Pending Tasks':
                 return stats.pendingTasks
             case 'Task Time':
-                return stats.taskTimeInMin
+                return calculateTime(stats.taskTimeInMin)
             case 'Remaining Time':
-                return stats.remainingTimeInMin
+                return calculateTime(stats.remainingTimeInMin)
             default:
                 return ''
         }
@@ -62,7 +62,7 @@ const Dashboard = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, type: 'spring' }}
         >
-            <div className="mt-10 p-8 relative space-y-12 flex flex-col w-full h-full text-whitish bg-transparent border-2 border-accent overflow-hidden shadow-md rounded-xl bg-clip-border">
+            <div className="mt-1 px-8 py-4 relative space-y-12 flex flex-col w-full h-full text-whitish bg-transparent border-2 border-accent overflow-hidden shadow-md rounded-xl bg-clip-border">
                 <div className="space-y-5">
                     <h3 className="text-[2rem] font-semibold tracking-wide">Summary</h3>
                     <div className="flex space-x-14">
@@ -103,8 +103,8 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {rawData && rawData.pendingTasks > 0 && <div className="px-0 overflow-scroll">
-                    <table className="w-fit mt-4 text-left table-auto min-w-max border-2 border-accent text-lg">
+                {rawData && rawData.pendingTasks > 0 && <div className="border-2 border-accent w-fit rounded-[1rem] overflow-hidden">
+                    <table className="w-fit text-left table-auto min-w-max text-lg">
                         <thead className="bg-third-dark">
                             <tr className="text-center">
                                 {tableHead.map((head, index) => <TableHead key={index} name={head} />)}

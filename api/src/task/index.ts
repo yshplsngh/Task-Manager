@@ -32,15 +32,15 @@ export default function (app: Express) {
   );
 
   app.get('/api/task/get', requireUser, async (req: Request, res: Response) => {
-    const {status} = req.query
-    
-    const whereCondition:Prisma.TaskWhereInput = {
-      userId: res.locals.user.id,
-  };
+    const { status } = req.query;
 
-  if (status && (status === 'Finished' || status === 'Pending')) {
+    const whereCondition: Prisma.TaskWhereInput = {
+      userId: res.locals.user.id,
+    };
+
+    if (status && (status === 'Finished' || status === 'Pending')) {
       whereCondition.taskStatus = status;
-  }
+    }
 
     const task = await prisma.task.findMany({
       where: whereCondition,
@@ -132,7 +132,7 @@ export default function (app: Express) {
           taskStatus: true,
           startTime: true,
           endTime: true,
-        }
+        },
       });
       const taskLen = task.length;
 
@@ -148,7 +148,7 @@ export default function (app: Express) {
       let calTotalTimeToFinish = 0;
 
       type TaskAnalytics = {
-        priority:number;
+        priority: number;
         pendingTasks: number;
         taskTimeInMin: number;
         remainingTimeInMin: number;
@@ -160,7 +160,6 @@ export default function (app: Express) {
           const taskPriority = task.priority;
 
           if (task.taskStatus === 'Pending') {
-
             if (!acc[taskPriority]) {
               acc[taskPriority] = {
                 priority: taskPriority,
@@ -197,15 +196,16 @@ export default function (app: Express) {
         },
         {} as Record<number, TaskAnalytics>, // initial value of acc
       );
-      
 
-      const calTasksPendingPer = Math.round((calPendingTasks*100) / taskLen) || 0
+      const calTasksPendingPer =
+        Math.round((calPendingTasks * 100) / taskLen) || 0;
 
       const response = {
         totalTask: task.length,
         tasksCompleted: calTasksPendingPer === 0 ? 0 : 100 - calTasksPendingPer,
         tasksPending: calTasksPendingPer || 0,
-        averageTimePerTask: Math.round(calTotalTimeLapsed / calPendingTasks) || 0,
+        averageTimePerTask:
+          Math.round(calTotalTimeLapsed / calPendingTasks) || 0,
         pendingTasks: calPendingTasks,
         totalTimeLapsed: calTotalTimeLapsed,
         totalTimeToFinish: calTotalTimeToFinish,
