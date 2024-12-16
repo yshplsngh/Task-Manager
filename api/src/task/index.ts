@@ -3,6 +3,7 @@ import requireUser from '../utils/middleware/requireUser';
 import { TaskSchema, TaskWithIdSchema } from './types';
 import prisma from '../database';
 import { createError } from '../utils/middleware/errorHandling';
+import dayjs from 'dayjs';
 
 export default function (app: Express) {
   app.post(
@@ -24,7 +25,7 @@ export default function (app: Express) {
           endTime: parsedResult.data.endTime,
         },
       });
-      console.log(task);
+
       return res.status(201).json({ success: true });
     },
   );
@@ -125,18 +126,54 @@ export default function (app: Express) {
         },
       });
       const taskLen = task.length;
-      // handle it
-      if (!taskLen) {
-        return res.status(200).json();
-      }
-      
-      const taskCompleted = task.reduce((count, task) => 
-        task.taskStatus === 'Finished' ? count + 1 : count, 0);
-      const taskCompletedPer = ((taskCompleted*100)/taskLen).toFixed(0)
 
-      console.log(taskCompletedPer)
+      const taskCompleted = task.reduce(
+        (count, task) => (task.taskStatus === 'Finished' ? count + 1 : count),
+        0,
+      );
+      const taskCompletedPer = ((taskCompleted * 100) / taskLen).toFixed(0);
+
+      const tal = {
+        1: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
+        2: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
+        3: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
+        4: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
+        5: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
+      };
+
+      const calculateDuration = (startTime: string, endTime: string) => {
+        const start = dayjs(startTime);
+        const end = dayjs(endTime);
+        const minutes = end.diff(start, 'minute');
+        return minutes > 0 ? minutes : 0;
+      };
+
+      task.forEach((task) => {
+        if (task.taskStatus === 'Pending') {
+          // we just want total time for pending task only
+          tal[task.priority].pendingTasks++;
+
+          tal[task.priority].totalTimeInMin += calculateDuration(
+            task.startTime,
+            task.endTime,
+          );
+
+          // here we calculating remaining time, so need to give current in ISOstring
+          tal[task.priority].remainingTime += calculateDuration(
+            dayjs().toISOString(),
+            task.endTime,
+          );
+        }
+      });
       
-      const response = { totalTask: task.length };
+      console.log(tal);
+
+      const response = {
+        totalTask: task.length,
+        tasksCompleted: Number(taskCompletedPer),
+        tasksPending: 100 - Number(taskCompletedPer),
+        pendingTasks: taskLen - taskCompleted,
+      };
 
       return res.status(200).json(response);
     },
