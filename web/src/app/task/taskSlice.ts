@@ -8,10 +8,6 @@ import { api, type ProcessedResponse } from '../../utils/api';
 import { RootState } from '../store';
 import type { BTaskSchemaType, TaskSchemaType } from './types';
 
-const taskAdapter = createEntityAdapter<BTaskSchemaType>();
-
-const initialState = taskAdapter.getInitialState();
-
 export const createNewTask = createAsyncThunk(
   '/api/task/new',
   async (data: TaskSchemaType) => {
@@ -37,6 +33,14 @@ export const getSingleTask = createAsyncThunk(
     return api.get<BTaskSchemaType>(url);
   },
 );
+export const getRawData = createAsyncThunk('/api/task/getRawData', async () => {
+  const url = '/api/task/getRawData';
+  return api.get(url);
+});
+
+const taskAdapter = createEntityAdapter<BTaskSchemaType>();
+
+const initialState = taskAdapter.getInitialState();
 
 const taskSlice = createSlice({
   name: 'task',
@@ -60,17 +64,21 @@ const taskSlice = createSlice({
         },
       )
       .addCase(
-        updateTask.fulfilled,(state,action:PayloadAction<ProcessedResponse<BTaskSchemaType>>) => {
+        updateTask.fulfilled,
+        (state, action: PayloadAction<ProcessedResponse<BTaskSchemaType>>) => {
           taskAdapter.updateOne(state, {
             id: action.payload.json.id,
             changes: action.payload.json,
           });
-        }
-      )
+        },
+      );
   },
 });
 
-export const { selectAll: selectAllTask, selectById: selectTaskById,selectIds:selectTaskIds } =
-  taskAdapter.getSelectors((state: RootState) => state.task);
+export const {
+  selectAll: selectAllTask,
+  selectById: selectTaskById,
+  selectIds: selectTaskIds,
+} = taskAdapter.getSelectors((state: RootState) => state.task);
 
 export default taskSlice.reducer;

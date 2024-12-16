@@ -16,7 +16,7 @@ const TaskList = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch: AppDispatch = useDispatch();
     const taskIds = useSelector(selectTaskIds)
-
+    
     useEffect(() => {
         async function fetchTask() {
             setLoading(true);
@@ -30,7 +30,7 @@ const TaskList = () => {
             }
         }
         fetchTask().then(() => setLoading(false))
-    }, [dispatch])
+    }, [dispatch,taskIds])
 
 
     return !loading ? (
@@ -43,7 +43,7 @@ const TaskList = () => {
             <div className="w-full">
                 <div className="flex flex-row items-center justify-between px-3 py-4 transition-all md:px-5 md:py-6">
                     <h1 className="flex items-center text-xl font-semibold md:text-2xl">
-                        Dashboard{' '}
+                        Task List{' '}
                         <LayoutDashboard className={'ml-2 h-5 w-5 md:ml-3 md:h-6 md:w-6'} />
                     </h1>
                     <Button

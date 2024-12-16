@@ -86,9 +86,9 @@ export default function (app: Express) {
       const task = await prisma.task.update({
         where: {
           userId: res.locals.user.id,
-          id: parsedResult.data.id
+          id: parsedResult.data.id,
         },
-        data:{
+        data: {
           title: parsedResult.data.title,
           priority: parsedResult.data.priority,
           taskStatus: parsedResult.data.taskStatus,
@@ -108,4 +108,37 @@ export default function (app: Express) {
     },
   );
 
+  app.get(
+    '/api/task/getRawData',
+    requireUser,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const task = await prisma.task.findMany({
+        where: {
+          userId: res.locals.user.id,
+        },
+        select: {
+          id: true,
+          priority: true,
+          taskStatus: true,
+          startTime: true,
+          endTime: true,
+        },
+      });
+      const taskLen = task.length;
+      // handle it
+      if (!taskLen) {
+        return res.status(200).json();
+      }
+      
+      const taskCompleted = task.reduce((count, task) => 
+        task.taskStatus === 'Finished' ? count + 1 : count, 0);
+      const taskCompletedPer = ((taskCompleted*100)/taskLen).toFixed(0)
+
+      console.log(taskCompletedPer)
+      
+      const response = { totalTask: task.length };
+
+      return res.status(200).json(response);
+    },
+  );
 }
