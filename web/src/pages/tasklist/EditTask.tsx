@@ -16,6 +16,7 @@ import type { AppDispatch, RootState } from "../../app/store"
 import { selectTaskById, getSingleTask, updateTask } from "../../app/task/taskSlice"
 import { useNavigate, useParams } from "react-router"
 import LoLoadingSpinner from "../../ui/LoLoadingSpinner"
+import dayjs from "dayjs"
 
 const EditTask = () => {
     const dispatch: AppDispatch = useDispatch()
@@ -60,9 +61,15 @@ const EditTask = () => {
         e.preventDefault();
         const isValid = TaskSchema.safeParse(task)
         if (isValid.success) {
+            let updatedEndTime = { ...isValid.data, id: Number(taskId) }
+
+            // change endtime to current time if finished before endtime
+            if (singleTask.taskStatus === 'Pending' && isValid.data.taskStatus === 'Finished') {
+                updatedEndTime = { ...updatedEndTime, endTime: dayjs().toISOString() }
+            }
             setEditLoading(true);
             try {
-                await dispatch(updateTask({ ...isValid.data, id: Number(taskId) })).unwrap();
+                await dispatch(updateTask(updatedEndTime)).unwrap();
                 toast.success('Task Edited');
                 navigate('/tasklist')
             } catch (err) {

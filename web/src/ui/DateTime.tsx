@@ -26,7 +26,7 @@ function DateTime({
 
     useEffect(() => {
         onDateTimeChange(startDateTime, endDateTime);
-    }, [startDateTime, endDateTime])
+    }, [startDateTime, endDateTime,onDateTimeChange])
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>

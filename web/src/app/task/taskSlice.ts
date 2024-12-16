@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { api, type ProcessedResponse } from '../../utils/api';
 import { RootState } from '../store';
-import type { BRawDataType, BTaskSchemaType, TaskSchemaType } from './types';
+import type { BRawDataType, BTaskSchemaType, TaskSchemaType, TaskStatus } from './types';
 
 export const createNewTask = createAsyncThunk(
   '/api/task/new',
@@ -22,8 +22,8 @@ export const updateTask = createAsyncThunk(
     return api.post(url, data);
   },
 );
-export const getTask = createAsyncThunk('/api/task/get', async () => {
-  const url = '/api/task/get';
+export const getTask = createAsyncThunk('/api/task/get', async ({status}:{status:TaskStatus}) => {
+  const url = `/api/task/get?status=${status}`;
   return api.get<BTaskSchemaType[]>(url);
 });
 export const getSingleTask = createAsyncThunk(

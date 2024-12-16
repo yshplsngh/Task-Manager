@@ -51,3 +51,7 @@ export type BRawDataType = {
   totalTimeToFinish: number;
   tableData: Record<number, StatsType>;
 };
+
+export const STATUS_FILTERS = ['All', 'Finished', 'Pending'] as const;
+
+export type TaskStatus = typeof STATUS_FILTERS[number];

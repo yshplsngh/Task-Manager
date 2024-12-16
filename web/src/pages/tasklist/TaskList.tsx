@@ -6,22 +6,26 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import LoLoadingSpinner from "../../ui/LoLoadingSpinner";
 import type { AppDispatch } from "../../app/store";
-import { useDispatch, useSelector } from "react-redux";
-import { getTask, selectTaskIds } from "../../app/task/taskSlice";
+import { useDispatch } from "react-redux";
+import { getTask } from "../../app/task/taskSlice";
 import type { FetchResponseError } from "../../utils/api";
 import { toast } from "sonner";
+import type { BTaskSchemaType } from "../../app/task/types";
+import { STATUS_FILTERS, type TaskStatus } from "../../app/task/types";
 
 const TaskList = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch: AppDispatch = useDispatch();
-    const taskIds = useSelector(selectTaskIds)
-    
+    const [allTask, setAllTask] = useState<BTaskSchemaType[]>();
+    const [activeStatusFilter, setActiveStatusFilter] = useState<TaskStatus>('All');
+    console.log('tl')
     useEffect(() => {
         async function fetchTask() {
             setLoading(true);
             try {
-                await dispatch(getTask()).unwrap();
+                const data = await dispatch(getTask({status:activeStatusFilter})).unwrap();
+                setAllTask(data.json)
             } catch (err) {
                 const errorMessage =
                     (err as FetchResponseError).message ||
@@ -30,15 +34,14 @@ const TaskList = () => {
             }
         }
         fetchTask().then(() => setLoading(false))
-    }, [dispatch,taskIds])
+    }, [dispatch,activeStatusFilter])
 
 
     return !loading ? (
         <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className={'relative'}
+            initial={{ opacity: 0}}
+            animate={{ opacity: 1}}
+            transition={{ duration: 0.5, type: 'tween' }}
         >
             <div className="w-full">
                 <div className="flex flex-row items-center justify-between px-3 py-4 transition-all md:px-5 md:py-6">
@@ -57,8 +60,13 @@ const TaskList = () => {
                 </div>
                 <hr className={'border-accent'} />
                 <div className={'mt-10 flex flex-col items-center justify-center transition-all'}>
-                    {taskIds && taskIds.length>0 ? (
-                        <Table />
+                    {allTask && allTask.length > 0 ? (
+                        <Table
+                            allTask={allTask}
+                            statusFilter={STATUS_FILTERS}
+                            activeStatusFilter={activeStatusFilter}
+                            setActiveStatusFilter={setActiveStatusFilter}
+                        />
                     ) :
                         (
                             <div className="w-fit space-y-3">

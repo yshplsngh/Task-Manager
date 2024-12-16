@@ -4,26 +4,31 @@ import Button from "../../ui/Button";
 import * as React from 'react';
 import dayjs from "dayjs";
 import { useNavigate } from "react-router";
-import { useSelector } from "react-redux";
-import { selectAllTask } from "../../app/task/taskSlice";
+import { STATUS_FILTERS, type TaskStatus } from "../../app/task/types";
 
-const Table = () => {
+interface TableProps {
+    allTask: BTaskSchemaType[];
+    statusFilter: typeof STATUS_FILTERS;
+    activeStatusFilter: TaskStatus;
+    setActiveStatusFilter: (status: TaskStatus) => void;
+}
+
+const Table = ({ allTask, statusFilter, activeStatusFilter, setActiveStatusFilter }: TableProps) => {
     const navigate = useNavigate();
-    const tabOptions = ['All', 'Finished', 'Pending']
+    console.log('table')
     const tableHead = ['Task ID', 'Title', 'Task Status', 'Priority', 'Start Time', 'End Time', 'Task Duration', 'Edit']
 
     // It will return corresponding data to table head
-    const allTask = useSelector(selectAllTask)
     const calculateDuration = (startTime: string, endTime: string) => {
         const start = dayjs(startTime);
         const end = dayjs(endTime);
         const hours = Math.floor(end.diff(start, 'minute') / 60);
         const minutes = end.diff(start, 'minute') % 60;
-        const hourStr = hours > 0 ? `${hours} h` : ''
-        const minStr = minutes !== 0 ? `${minutes} m` : ''
+        const hourStr = hours > 0 ? `${hours}h` : ''
+        const minStr = minutes !== 0 ? `${minutes}m` : ''
         return `${hourStr} ${hourStr.length > 0 && minStr.length > 0 ? ' : ' : ''} ${minStr}`;
     }
-    
+
     const getCellContent = (task: BTaskSchemaType, header: string) => {
         switch (header) {
             case 'Task ID':
@@ -35,9 +40,9 @@ const Table = () => {
             case 'Priority':
                 return task.priority;
             case 'Start Time':
-                return dayjs(task.startTime).format('MMM D, YYYY HH:mm');
+                return dayjs(task.startTime).format('D MMM YYYY • h:mm A')
             case 'End Time':
-                return dayjs(task.endTime).format('MMM D, YYYY HH:mm');
+                return dayjs(task.endTime).format('D MMM YYYY • h:mm A')
             case 'Task Duration':
                 return calculateDuration(task.startTime, task.endTime)
             case 'Edit':
@@ -60,15 +65,15 @@ const Table = () => {
             <div className="relative mx-4 mt-4 overflow-hidden text-whitish bg-transparent rounded-none bg-clip-border">
                 <div className="block w-full overflow-hidden md:w-max">
                     <nav>
-                        <ul role="tablist" className="relative flex flex-row p-1 space-x-3 bg-secondary-dark rounded-lg bg-blue-gray-50 bg-opacity-60">
-                            {tabOptions.map((tab, index) => <TableButton key={index} name={tab} />)}
+                        <ul role="tablist" className="relative flex flex-row p-1 space-x-3 rounded-lg bg-blue-gray-50 bg-opacity-60">
+                            {statusFilter.map((tab, index) => <TableButton key={index} name={tab} activeStatusFilter={activeStatusFilter} setActiveStatusFilter={setActiveStatusFilter} />)}
                         </ul>
                     </nav>
                 </div>
             </div>
             <div className="px-0 overflow-scroll">
                 <table className="w-full mt-4 text-left table-auto min-w-max">
-                    <thead>
+                    <thead className="bg-third-dark">
                         <tr>
                             {tableHead.map((head, index) => <TableHead key={index} name={head} />)}
                         </tr>
@@ -92,14 +97,11 @@ const Table = () => {
 export default Table
 
 
-const TableButton = ({ name }: { name: string }) => {
+const TableButton = ({ name, activeStatusFilter, setActiveStatusFilter }: { name: TaskStatus, activeStatusFilter: TaskStatus, setActiveStatusFilter: (status: TaskStatus) => void }) => {
     return (
         <li role="tab"
-            className="relative flex items-center justify-center w-full h-full px-3 py-1 font-sans text-md antialiased font-normal leading-relaxed text-center bg-transparent cursor-pointer select-none text-whitish"
             data-value={name}>
-            <div className="z-20 text-inherit border-b-2 border-whitish">
-                {name}
-            </div>
+            <Button type="button" variant={`${name === activeStatusFilter ? "secondary" : "outlineB"}`} text={name} onClick={() => setActiveStatusFilter(name)} />
         </li>
     )
 }

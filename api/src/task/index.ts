@@ -4,6 +4,7 @@ import { TaskSchema, TaskWithIdSchema } from './types';
 import prisma from '../database';
 import { createError } from '../utils/middleware/errorHandling';
 import dayjs from 'dayjs';
+import type { Prisma } from '@prisma/client';
 
 export default function (app: Express) {
   app.post(
@@ -31,10 +32,18 @@ export default function (app: Express) {
   );
 
   app.get('/api/task/get', requireUser, async (req: Request, res: Response) => {
+    const {status} = req.query
+    
+    const whereCondition:Prisma.TaskWhereInput = {
+      userId: res.locals.user.id,
+  };
+
+  if (status && (status === 'Finished' || status === 'Pending')) {
+      whereCondition.taskStatus = status;
+  }
+
     const task = await prisma.task.findMany({
-      where: {
-        userId: res.locals.user.id,
-      },
+      where: whereCondition,
       select: {
         id: true,
         title: true,

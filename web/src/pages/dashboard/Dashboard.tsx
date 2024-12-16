@@ -14,7 +14,6 @@ const Dashboard = () => {
     const dispatch: AppDispatch = useDispatch();
     const [rawData, setRawData] = useState<BRawDataType>();
 
-    // console.log(rawData?.tableData)
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
@@ -104,10 +103,10 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className="px-0 overflow-scroll">
+                {rawData && rawData.pendingTasks > 0 && <div className="px-0 overflow-scroll">
                     <table className="w-fit mt-4 text-left table-auto min-w-max border-2 border-accent text-lg">
                         <thead className="bg-third-dark">
-                            <tr>
+                            <tr className="text-center">
                                 {tableHead.map((head, index) => <TableHead key={index} name={head} />)}
                             </tr>
                         </thead>
@@ -121,7 +120,7 @@ const Dashboard = () => {
                             ))}
                         </tbody>
                     </table>
-                </div>
+                </div>}
             </div>
         </motion.div>
     ) : (
