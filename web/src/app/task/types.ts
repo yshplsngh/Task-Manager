@@ -32,4 +32,21 @@ export type BTaskSchemaType = {
   startTime: string;
   endTime: string;
   id: number;
-}
+};
+
+type TaskAnalytics = {
+  pendingTasks: number;
+  taskTimeInMin: number;
+  remainingTimeInMin: number;
+};
+
+export type BRawDataType = {
+  totalTask: number;
+  tasksCompleted: number;
+  tasksPending: number;
+  averageTimePerTask: number;
+  pendingTasks: number;
+  totalTimeLapsed: number;
+  totalTimeToFinish: number;
+  tableData: Record<number, TaskAnalytics>;
+};

@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { api, type ProcessedResponse } from '../../utils/api';
 import { RootState } from '../store';
-import type { BTaskSchemaType, TaskSchemaType } from './types';
+import type { BRawDataType, BTaskSchemaType, TaskSchemaType } from './types';
 
 export const createNewTask = createAsyncThunk(
   '/api/task/new',
@@ -19,7 +19,7 @@ export const updateTask = createAsyncThunk(
   '/api/task/edit',
   async (data: BTaskSchemaType) => {
     const url = '/api/task/edit';
-    return api.post<BTaskSchemaType>(url, data);
+    return api.post(url, data);
   },
 );
 export const getTask = createAsyncThunk('/api/task/get', async () => {
@@ -35,7 +35,7 @@ export const getSingleTask = createAsyncThunk(
 );
 export const getRawData = createAsyncThunk('/api/task/getRawData', async () => {
   const url = '/api/task/getRawData';
-  return api.get(url);
+  return api.get<BRawDataType>(url);
 });
 
 const taskAdapter = createEntityAdapter<BTaskSchemaType>();
@@ -63,15 +63,6 @@ const taskSlice = createSlice({
           taskAdapter.upsertOne(state, action.payload.json);
         },
       )
-      .addCase(
-        updateTask.fulfilled,
-        (state, action: PayloadAction<ProcessedResponse<BTaskSchemaType>>) => {
-          taskAdapter.updateOne(state, {
-            id: action.payload.json.id,
-            changes: action.payload.json,
-          });
-        },
-      );
   },
 });
 

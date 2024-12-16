@@ -15,7 +15,7 @@ export default function (app: Express) {
         next(parsedResult.error);
         return;
       }
-      const task = await prisma.task.create({
+      await prisma.task.create({
         data: {
           userId: res.locals.user.id,
           title: parsedResult.data.title,
@@ -84,7 +84,7 @@ export default function (app: Express) {
         return;
       }
 
-      const task = await prisma.task.update({
+      await prisma.task.update({
         where: {
           userId: res.locals.user.id,
           id: parsedResult.data.id,
@@ -105,17 +105,17 @@ export default function (app: Express) {
           endTime: true,
         },
       });
-      return res.status(200).json(task);
+      return res.status(201).json({ success: true });
     },
   );
 
   app.get(
     '/api/task/getRawData',
     requireUser,
-    async (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response) => {
       const task = await prisma.task.findMany({
         where: {
-          userId: res.locals.user.id,
+          userId: 89,
         },
         select: {
           id: true,
@@ -131,15 +131,8 @@ export default function (app: Express) {
         (count, task) => (task.taskStatus === 'Finished' ? count + 1 : count),
         0,
       );
-      const taskCompletedPer = ((taskCompleted * 100) / taskLen).toFixed(0);
-
-      const tal = {
-        1: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
-        2: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
-        3: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
-        4: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
-        5: { pendingTasks: 0, totalTimeInMin: 0, remainingTime: 0 },
-      };
+      const taskCompletedPer =
+        taskLen === 0 ? 0 : Math.round((taskCompleted * 100) / taskLen);
 
       const calculateDuration = (startTime: string, endTime: string) => {
         const start = dayjs(startTime);
@@ -148,31 +141,67 @@ export default function (app: Express) {
         return minutes > 0 ? minutes : 0;
       };
 
-      task.forEach((task) => {
-        if (task.taskStatus === 'Pending') {
-          // we just want total time for pending task only
-          tal[task.priority].pendingTasks++;
+      let calPendingTasks = 0;
+      let calTotalTimeLapsed = 0;
+      let calTotalTimeToFinish = 0;
 
-          tal[task.priority].totalTimeInMin += calculateDuration(
-            task.startTime,
-            task.endTime,
-          );
+      type TaskAnalytics = {
+        pendingTasks: number;
+        taskTimeInMin: number;
+        remainingTimeInMin: number;
+      };
 
-          // here we calculating remaining time, so need to give current in ISOstring
-          tal[task.priority].remainingTime += calculateDuration(
-            dayjs().toISOString(),
-            task.endTime,
-          );
-        }
-      });
+      const tableStats = task.reduce(
+        (acc: Record<number, TaskAnalytics>, task) => {
+          // from 1 to 5
+          const priority = task.priority;
+
+          if (!acc[priority]) {
+            acc[priority] = {
+              pendingTasks: 0,
+              taskTimeInMin: 0,
+              remainingTimeInMin: 0,
+            };
+          }
+
+          if (task.taskStatus === 'Pending') {
+            acc[priority].pendingTasks++;
+            calPendingTasks++;
+
+            acc[priority].taskTimeInMin += calculateDuration(
+              task.startTime,
+              task.endTime,
+            );
+            calTotalTimeLapsed += calculateDuration(
+              task.startTime,
+              task.endTime,
+            );
+
+            // here we calculating remaining time, so need to give current time in ISOstring
+            acc[priority].remainingTimeInMin += calculateDuration(
+              dayjs().toISOString(),
+              task.endTime,
+            );
+            calTotalTimeToFinish += calculateDuration(
+              dayjs().toISOString(),
+              task.endTime,
+            );
+          }
+
+          return acc;
+        },
+        {} as Record<number, TaskAnalytics>, // initial value of acc
+      );
       
-      console.log(tal);
-
       const response = {
         totalTask: task.length,
-        tasksCompleted: Number(taskCompletedPer),
-        tasksPending: 100 - Number(taskCompletedPer),
-        pendingTasks: taskLen - taskCompleted,
+        tasksCompleted: taskCompletedPer,
+        tasksPending: taskCompletedPer === 0 ? 0 : 100 - taskCompletedPer,
+        averageTimePerTask: (calTotalTimeLapsed / calPendingTasks) || 0,
+        pendingTasks: calPendingTasks,
+        totalTimeLapsed: calTotalTimeLapsed,
+        totalTimeToFinish: calTotalTimeToFinish,
+        tableData: tableStats,
       };
 
       return res.status(200).json(response);
