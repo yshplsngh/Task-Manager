@@ -17,7 +17,7 @@ const TaskList = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch: AppDispatch = useDispatch();
     const [allTask, setAllTask] = useState<BTaskSchemaType[]>();
-    const [activeStatusFilter, setActiveStatusFilter] = useState<TaskStatus>('ALL');
+    const [activeStatusFilter, setActiveStatusFilter] = useState<TaskStatus>('PENDING');
     const [activeSortFilter, setActiveSortFilter] = useState<SortMethod>('START TIME: ASC');
     const [activePriorityFilter,setActivePriorityFilter] = useState<TaskPriority>('None')
 

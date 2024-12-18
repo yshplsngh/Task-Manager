@@ -8,6 +8,9 @@ import { WEB_NAME } from './api';
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+  const location = useLocation();
+  const omitHeader = ['/login'];
+  const pickBG = ['/', '/login'];
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -25,11 +28,6 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
       </div>
     );
   }
-
-
-  const location = useLocation();
-  const omitHeader = ['/login'];
-  const pickBG = ['/', '/login'];
 
   const shouldOmitHeader = () => {
     return omitHeader.some((path) => location.pathname === path);

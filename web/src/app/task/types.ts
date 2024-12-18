@@ -52,7 +52,7 @@ export type BRawDataType = {
   tableData: Record<number, StatsType>;
 };
 
-export const STATUS_FILTERS = ['ALL', 'FINISHED', 'PENDING'] as const;
+export const STATUS_FILTERS = ['PENDING','FINISHED','ALL'] as const;
 export type TaskStatus = typeof STATUS_FILTERS[number];
 
 export const SORT_FILTERS = ['START TIME: ASC','START TIME: DESC','END TIME: ASC','END TIME: DESC'] as const;
