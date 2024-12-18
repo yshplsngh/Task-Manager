@@ -36,6 +36,6 @@ model Task {
 }
 
 enum TaskStatus {
-  Pending
-  Finished
+  PENDING
+  FINISHED
 }

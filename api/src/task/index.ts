@@ -32,18 +32,37 @@ export default function (app: Express) {
   );
 
   app.get('/api/task/get', requireUser, async (req: Request, res: Response) => {
-    const { status } = req.query;
+    const rawStatus = req.query.status as string;
+    const taskStatus = rawStatus?.toUpperCase();
+    const rawSortBy = req.query.sortBy as string;
+    const sortBy = rawSortBy?.toUpperCase();
 
     const whereCondition: Prisma.TaskWhereInput = {
       userId: res.locals.user.id,
     };
-
-    if (status && (status === 'Finished' || status === 'Pending')) {
-      whereCondition.taskStatus = status;
+    
+    if (taskStatus && (taskStatus === 'FINISHED' || taskStatus === 'PENDING')) {
+      whereCondition.taskStatus = taskStatus;
     }
+
+    const orderCondition = (() => {
+      switch (sortBy) {
+        case 'START TIME: ASC':
+          return { startTime: 'asc' as Prisma.SortOrder };
+        case 'START TIME: DESC':
+          return { startTime: 'desc' as Prisma.SortOrder };
+        case 'END TIME: ASC':
+          return { endTime: 'asc' as Prisma.SortOrder };
+        case 'END TIME: DESC':
+          return { endTime: 'desc' as Prisma.SortOrder };
+        default:
+          return { startTime: 'asc' as Prisma.SortOrder };
+      }
+    })();
 
     const task = await prisma.task.findMany({
       where: whereCondition,
+      orderBy: orderCondition,
       select: {
         id: true,
         title: true,
@@ -159,7 +178,7 @@ export default function (app: Express) {
           // from 1 to 5
           const taskPriority = task.priority;
 
-          if (task.taskStatus === 'Pending') {
+          if (task.taskStatus === 'PENDING') {
             if (!acc[taskPriority]) {
               acc[taskPriority] = {
                 priority: taskPriority,

@@ -7,7 +7,7 @@ export const TaskSchema = z
     priority: z.number().min(1).max(5),
     taskStatus: z
       .string()
-      .refine((status) => status === 'Finished' || status === 'Pending', {
+      .refine((status) => status === 'FINISHED' || status === 'PENDING', {
         message: "Status must be either 'finished' or 'pending'",
       }),
     startTime: z.string(),
@@ -28,7 +28,7 @@ export type TaskSchemaType = z.infer<typeof TaskSchema>;
 export type BTaskSchemaType = {
   title: string;
   priority: number;
-  taskStatus: 'Pending' | 'Finished';
+  taskStatus: 'PENDING' | 'FINISHED';
   startTime: string;
   endTime: string;
   id: number;
@@ -52,6 +52,8 @@ export type BRawDataType = {
   tableData: Record<number, StatsType>;
 };
 
-export const STATUS_FILTERS = ['All', 'Finished', 'Pending'] as const;
-
+export const STATUS_FILTERS = ['ALL', 'FINISHED', 'PENDING'] as const;
 export type TaskStatus = typeof STATUS_FILTERS[number];
+
+export const SORT_FILTERS = ['START TIME: ASC','START TIME: DESC','END TIME: ASC','END TIME: DESC'] as const;
+export type SortMethod = typeof SORT_FILTERS[number];

@@ -1,21 +1,37 @@
-import { SquarePen } from "lucide-react";
-import type { BTaskSchemaType } from "../../app/task/types";
+import { ArrowUpDown, SquarePen } from "lucide-react";
+import type { BTaskSchemaType, SORT_FILTERS, SortMethod, STATUS_FILTERS, TaskStatus } from "../../app/task/types";
 import Button from "../../ui/Button";
 import * as React from 'react';
+import { useState } from "react";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router";
-import { STATUS_FILTERS, type TaskStatus } from "../../app/task/types";
+import { motion } from "framer-motion";
 
 interface TableProps {
     allTask?: BTaskSchemaType[];
-    statusFilter: typeof STATUS_FILTERS;
+    STATUS_FILTERS: typeof STATUS_FILTERS;
     activeStatusFilter: TaskStatus;
-    setActiveStatusFilter: (status: TaskStatus) => void;
+    setActiveStatusFilter: (taskStatus: TaskStatus) => void;
+
+    SORT_FILTERS: typeof SORT_FILTERS;
+    activeSortFilter: SortMethod;
+    setActiveSortFilter: (sortMethod: SortMethod) => void;
 }
 
-const Table = ({ allTask, statusFilter, activeStatusFilter, setActiveStatusFilter }: TableProps) => {
+const Table = (
+    {
+        allTask,
+        STATUS_FILTERS,
+        activeStatusFilter,
+        setActiveStatusFilter,
+        SORT_FILTERS,
+        activeSortFilter,
+        setActiveSortFilter
+    }: TableProps) => {
+
     const navigate = useNavigate();
-    const tableHead = ['Task ID', 'Title', 'Task Status', 'Priority', 'Start Time', 'End Time', 'Task Duration', 'Edit']
+    const tableHead = ['Task ID', 'Title', 'Task Status', 'Priority', 'Start Time', 'End Time', 'Task Duration', 'Edit'];
+    const [sortMenuToggle, setSortMenuToggle] = useState(false);
 
     // It will return corresponding data to table head
     const calculateDuration = (startTime: string, endTime: string) => {
@@ -60,17 +76,54 @@ const Table = ({ allTask, statusFilter, activeStatusFilter, setActiveStatusFilte
     };
 
     return (
-        <div className="relative flex py-10 space-y-5 flex-col w-full h-full text-whitish bg-transparent border-2 border-accent overflow-hidden shadow-md rounded-xl bg-clip-border">
-            <div className="px-4 relative overflow-hidden text-whitish bg-transparent rounded-none bg-clip-border">
-                <div className="block w-full overflow-hidden md:w-max">
-                    <nav>
+        <div className="relative flex pb-2 pt-10 space-y-5 flex-col w-full h-full text-whitish bg-transparent border-2 border-accent overflow-hidden shadow-md rounded-xl bg-clip-border">
+            <div className="px-4 text-whitish bg-transparent rounded-none bg-clip-border">
+                <div className="block w-full">
+                    <nav className="flex justify-between">
+
+                        {/* status button */}
                         <ul role="tablist" className="relative flex flex-row p-1 space-x-3 rounded-lg bg-blue-gray-50 bg-opacity-60">
-                            {statusFilter.map((tab, index) => <TableButton key={index} name={tab} activeStatusFilter={activeStatusFilter} setActiveStatusFilter={setActiveStatusFilter} />)}
+                            {STATUS_FILTERS.map((tab, index) => <TableButton key={index} name={tab} activeStatusFilter={activeStatusFilter} setActiveStatusFilter={setActiveStatusFilter} />)}
                         </ul>
+
+                        {/* sorting button */}
+                        <div className="relative">
+                            <Button
+                                type={'button'}
+                                variant={'outlineB'}
+                                text="Sort"
+                                className={'w-fit rounded-2xl'}
+                                icon={<ArrowUpDown className="size-4 text-whitish" />}
+                                onClick={() => setSortMenuToggle((prev) => !prev)}
+                            />
+
+                            {sortMenuToggle && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.1 }}
+                                    className={
+                                        'border-accent bg-secondary-dark absolute right-0 top-10 border-[2px] p-1 z-10 rounded-2xl'
+                                    }
+                                >
+                                    {SORT_FILTERS.map((name, index) => (
+                                        <Button
+                                            key={index}
+                                            type={'button'}
+                                            variant={'outlineB'}
+                                            text={name}
+                                            className={ `hover:bg-accent justify-start border-none ${activeSortFilter === name ? 'bg-accent': 'bg-transparent'}`}
+                                            onClick={() => setActiveSortFilter(name)}
+                                        />
+                                    ))}
+                                </motion.div>
+                            )}
+                        </div>
+
                     </nav>
                 </div>
             </div>
-            <div className="px-0 overflow-scroll">
+            <div className="px-0">
                 <table className="w-full text-left table-auto min-w-max">
                     <thead className="bg-third-dark">
                         <tr>
@@ -96,11 +149,17 @@ const Table = ({ allTask, statusFilter, activeStatusFilter, setActiveStatusFilte
 export default Table
 
 
-const TableButton = ({ name, activeStatusFilter, setActiveStatusFilter }: { name: TaskStatus, activeStatusFilter: TaskStatus, setActiveStatusFilter: (status: TaskStatus) => void }) => {
+const TableButton = ({ name, activeStatusFilter, setActiveStatusFilter }: { name: TaskStatus, activeStatusFilter: TaskStatus, setActiveStatusFilter: (taskStatus: TaskStatus) => void }) => {
     return (
         <li role="tab"
             data-value={name}>
-            <Button type="button" variant={`${name === activeStatusFilter ? "secondary" : "outlineB"}`} text={name} onClick={() => setActiveStatusFilter(name)} />
+            <Button
+                type="button"
+                variant={`${name === activeStatusFilter ? "secondary" : "outlineB"}`}
+                text={name}
+                onClick={() => setActiveStatusFilter(name)}
+                className="rounded-2xl"
+            />
         </li>
     )
 }

@@ -18,7 +18,7 @@ import { useNavigate } from "react-router"
 
 const CreateNewTask = () => {
     const dispatch: AppDispatch = useDispatch()
-    const [task, setTask] = useState<TaskSchemaType>({ title: '', priority: 1, taskStatus: 'Pending', startTime: '', endTime: '' });
+    const [task, setTask] = useState<TaskSchemaType>({ title: '', priority: 1, taskStatus: 'PENDING', startTime: '', endTime: '' });
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
 
@@ -85,7 +85,7 @@ const CreateNewTask = () => {
                                     </div>
                                     <div className="flex flex-col space-y-2">
                                         <Label htmlFor="switch-component-on">Status</Label>
-                                        <Toggle checked={task.taskStatus === "Finished" ? true : false} onChange={() => setTask({ ...task, taskStatus: task.taskStatus === 'Pending' ? 'Finished' : 'Pending' })} />
+                                        <Toggle checked={task.taskStatus === "FINISHED" ? true : false} onChange={() => setTask({ ...task, taskStatus: task.taskStatus === 'PENDING' ? 'FINISHED' : 'PENDING' })} />
                                     </div>
                                 </div>
                                 <div className="space-y-2">

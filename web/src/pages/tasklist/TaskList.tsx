@@ -10,21 +10,21 @@ import { useDispatch } from "react-redux";
 import { getTask } from "../../app/task/taskSlice";
 import type { FetchResponseError } from "../../utils/api";
 import { toast } from "sonner";
-import type { BTaskSchemaType } from "../../app/task/types";
-import { STATUS_FILTERS, type TaskStatus } from "../../app/task/types";
+import { type BTaskSchemaType, type SortMethod, STATUS_FILTERS, type TaskStatus, SORT_FILTERS } from "../../app/task/types";
 
 const TaskList = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch: AppDispatch = useDispatch();
     const [allTask, setAllTask] = useState<BTaskSchemaType[]>();
-    const [activeStatusFilter, setActiveStatusFilter] = useState<TaskStatus>('All');
+    const [activeStatusFilter, setActiveStatusFilter] = useState<TaskStatus>('ALL');
+    const [activeSortFilter, setActiveSortFilter] = useState<SortMethod>('START TIME: ASC');
 
     useEffect(() => {
         async function fetchTask() {
             setLoading(true);
             try {
-                const data = await dispatch(getTask({ status: activeStatusFilter })).unwrap();
+                const data = await dispatch(getTask({ status: activeStatusFilter,sortBy:activeSortFilter })).unwrap();
                 setAllTask(data.json)
             } catch (err) {
                 const errorMessage =
@@ -34,7 +34,7 @@ const TaskList = () => {
             }
         }
         fetchTask().then(() => setLoading(false))
-    }, [dispatch, activeStatusFilter])
+    }, [dispatch, activeStatusFilter,activeSortFilter])
 
 
     return !loading ? (
@@ -59,12 +59,16 @@ const TaskList = () => {
                     />
                 </div>
                 <hr className={'border-accent'} />
-                <div className={'mt-10 flex flex-col items-center justify-center transition-all'}>
+                <div className={'my-10 flex flex-col items-center justify-center transition-all'}>
                     <Table
                         allTask={allTask}
-                        statusFilter={STATUS_FILTERS}
+                        STATUS_FILTERS={STATUS_FILTERS}
                         activeStatusFilter={activeStatusFilter}
                         setActiveStatusFilter={setActiveStatusFilter}
+
+                        SORT_FILTERS={SORT_FILTERS}
+                        activeSortFilter={activeSortFilter}
+                        setActiveSortFilter={setActiveSortFilter}
                     />
                 </div>
             </div>

@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const TaskSchema = z.object({
   title: z.string().trim().min(1),
   priority: z.number().min(1).max(5),
-  taskStatus: z.string().refine((status)=> status==='Finished' || status==='Pending',{
+  taskStatus: z.string().refine((status)=> status==='FINISHED' || status==='PENDING',{
     message: "Status must be either 'finished' or 'pending'"
   }),
   startTime: z.string(),
