@@ -1,5 +1,5 @@
-import { ArrowUpDown, SquarePen } from "lucide-react";
-import type { BTaskSchemaType, SORT_FILTERS, SortMethod, STATUS_FILTERS, TaskStatus } from "../../app/task/types";
+import { ArrowUpDown, ListTodo, SquarePen } from "lucide-react";
+import type { BTaskSchemaType, PRIORITY_FILTERS, SORT_FILTERS, SortMethod, STATUS_FILTERS, TaskPriority, TaskStatus } from "../../app/task/types";
 import Button from "../../ui/Button";
 import * as React from 'react';
 import { useState } from "react";
@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 
 interface TableProps {
     allTask?: BTaskSchemaType[];
+
     STATUS_FILTERS: typeof STATUS_FILTERS;
     activeStatusFilter: TaskStatus;
     setActiveStatusFilter: (taskStatus: TaskStatus) => void;
@@ -16,6 +17,10 @@ interface TableProps {
     SORT_FILTERS: typeof SORT_FILTERS;
     activeSortFilter: SortMethod;
     setActiveSortFilter: (sortMethod: SortMethod) => void;
+
+    PRIORITY_FILTERS: typeof PRIORITY_FILTERS;
+    activePriorityFilter: TaskPriority
+    setActivePriorityFilter: (taskPriority: TaskPriority) => void;
 }
 
 const Table = (
@@ -26,12 +31,16 @@ const Table = (
         setActiveStatusFilter,
         SORT_FILTERS,
         activeSortFilter,
-        setActiveSortFilter
+        setActiveSortFilter,
+        PRIORITY_FILTERS,
+        activePriorityFilter,
+        setActivePriorityFilter
     }: TableProps) => {
 
     const navigate = useNavigate();
     const tableHead = ['Task ID', 'Title', 'Task Status', 'Priority', 'Start Time', 'End Time', 'Task Duration', 'Edit'];
-    const [sortMenuToggle, setSortMenuToggle] = useState(false);
+    const [sortMenuToggle, setSortMenuToggle] = useState<boolean>(false);
+    const [priorityMenuToggle, setPriorityMenuToggle] = useState<boolean>(false)
 
     // It will return corresponding data to table head
     const calculateDuration = (startTime: string, endTime: string) => {
@@ -76,16 +85,16 @@ const Table = (
     };
 
     return (
-        <div className="relative flex pb-2 pt-10 space-y-5 flex-col w-full h-full text-whitish bg-transparent border-2 border-accent overflow-hidden shadow-md rounded-xl bg-clip-border">
+        <div className="relative flex pb-2 pt-10 space-y-5 flex-col w-full h-full text-whitish bg-transparent border-2 border-accent shadow-md rounded-xl bg-clip-border">
             <div className="px-4 text-whitish bg-transparent rounded-none bg-clip-border">
-                <div className="block w-full">
-                    <nav className="flex justify-between">
+                <nav className="flex justify-between">
 
-                        {/* status button */}
-                        <ul role="tablist" className="relative flex flex-row p-1 space-x-3 rounded-lg bg-blue-gray-50 bg-opacity-60">
-                            {STATUS_FILTERS.map((tab, index) => <TableButton key={index} name={tab} activeStatusFilter={activeStatusFilter} setActiveStatusFilter={setActiveStatusFilter} />)}
-                        </ul>
+                    {/* status button */}
+                    <ul role="tablist" className="flex flex-row space-x-4">
+                        {STATUS_FILTERS.map((tab, index) => <TableButton key={index} name={tab} activeStatusFilter={activeStatusFilter} setActiveStatusFilter={setActiveStatusFilter} />)}
+                    </ul>
 
+                    <div className="flex space-x-4">
                         {/* sorting button */}
                         <div className="relative">
                             <Button
@@ -112,7 +121,7 @@ const Table = (
                                             type={'button'}
                                             variant={'outlineB'}
                                             text={name}
-                                            className={ `hover:bg-accent justify-start border-none ${activeSortFilter === name ? 'bg-accent': 'bg-transparent'}`}
+                                            className={`hover:bg-accent justify-start border-none ${activeSortFilter === name ? 'bg-accent' : 'bg-transparent'}`}
                                             onClick={() => setActiveSortFilter(name)}
                                         />
                                     ))}
@@ -120,8 +129,42 @@ const Table = (
                             )}
                         </div>
 
-                    </nav>
-                </div>
+                        {/* priority button */}
+                        <div className="relative">
+                            <Button
+                                type={'button'}
+                                variant={'outlineB'}
+                                text="Priority"
+                                className={'w-fit rounded-2xl'}
+                                icon={<ListTodo className="size-4 text-whitish" />}
+                                onClick={() => setPriorityMenuToggle((prev) => !prev)}
+                            />
+
+                            {priorityMenuToggle && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.1 }}
+                                    className={
+                                        'border-accent bg-secondary-dark absolute right-0 top-10 border-[2px] p-1 z-10 rounded-2xl'
+                                    }
+                                >
+                                    {PRIORITY_FILTERS.map((name, index) => (
+                                        <Button
+                                            key={index}
+                                            type={'button'}
+                                            variant={'outlineB'}
+                                            text={name}
+                                            className={`hover:bg-accent justify-start border-none ${activePriorityFilter === name ? 'bg-accent' : 'bg-transparent'}`}
+                                            onClick={() => setActivePriorityFilter(name)}
+                                        />
+                                    ))}
+                                </motion.div>
+                            )}
+
+                        </div>
+                    </div>
+                </nav>
             </div>
             <div className="px-0">
                 <table className="w-full text-left table-auto min-w-max">

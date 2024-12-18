@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { getTask } from "../../app/task/taskSlice";
 import type { FetchResponseError } from "../../utils/api";
 import { toast } from "sonner";
-import { type BTaskSchemaType, type SortMethod, STATUS_FILTERS, type TaskStatus, SORT_FILTERS } from "../../app/task/types";
+import { type BTaskSchemaType, type SortMethod, STATUS_FILTERS, type TaskStatus, SORT_FILTERS, type TaskPriority, PRIORITY_FILTERS } from "../../app/task/types";
 
 const TaskList = () => {
     const navigate = useNavigate();
@@ -19,12 +19,13 @@ const TaskList = () => {
     const [allTask, setAllTask] = useState<BTaskSchemaType[]>();
     const [activeStatusFilter, setActiveStatusFilter] = useState<TaskStatus>('ALL');
     const [activeSortFilter, setActiveSortFilter] = useState<SortMethod>('START TIME: ASC');
+    const [activePriorityFilter,setActivePriorityFilter] = useState<TaskPriority>('None')
 
     useEffect(() => {
         async function fetchTask() {
             setLoading(true);
             try {
-                const data = await dispatch(getTask({ status: activeStatusFilter,sortBy:activeSortFilter })).unwrap();
+                const data = await dispatch(getTask({ status: activeStatusFilter,sortBy:activeSortFilter,priority:activePriorityFilter })).unwrap();
                 setAllTask(data.json)
             } catch (err) {
                 const errorMessage =
@@ -34,7 +35,7 @@ const TaskList = () => {
             }
         }
         fetchTask().then(() => setLoading(false))
-    }, [dispatch, activeStatusFilter,activeSortFilter])
+    }, [dispatch, activeStatusFilter,activeSortFilter,activePriorityFilter])
 
 
     return !loading ? (
@@ -69,6 +70,10 @@ const TaskList = () => {
                         SORT_FILTERS={SORT_FILTERS}
                         activeSortFilter={activeSortFilter}
                         setActiveSortFilter={setActiveSortFilter}
+
+                        PRIORITY_FILTERS={PRIORITY_FILTERS}
+                        activePriorityFilter={activePriorityFilter}
+                        setActivePriorityFilter={setActivePriorityFilter}
                     />
                 </div>
             </div>

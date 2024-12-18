@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { api, type ProcessedResponse } from '../../utils/api';
 import { RootState } from '../store';
-import type { BRawDataType, BTaskSchemaType, SortMethod, TaskSchemaType, TaskStatus } from './types';
+import type { BRawDataType, BTaskSchemaType, SortMethod, TaskPriority, TaskSchemaType, TaskStatus } from './types';
 
 export const createNewTask = createAsyncThunk(
   '/api/task/new',
@@ -22,8 +22,8 @@ export const updateTask = createAsyncThunk(
     return api.post(url, data);
   },
 );
-export const getTask = createAsyncThunk('/api/task/get', async ({status,sortBy}:{status:TaskStatus,sortBy:SortMethod}) => {
-  const url = `/api/task/get?status=${status}&sortBy=${sortBy}`;
+export const getTask = createAsyncThunk('/api/task/get', async ({status,sortBy,priority}:{status:TaskStatus,sortBy:SortMethod,priority:TaskPriority}) => {
+  const url = `/api/task/get?status=${status}&sortBy=${sortBy}&priority=${priority}`;
   return api.get<BTaskSchemaType[]>(url);
 });
 export const getSingleTask = createAsyncThunk(

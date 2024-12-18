@@ -57,3 +57,6 @@ export type TaskStatus = typeof STATUS_FILTERS[number];
 
 export const SORT_FILTERS = ['START TIME: ASC','START TIME: DESC','END TIME: ASC','END TIME: DESC'] as const;
 export type SortMethod = typeof SORT_FILTERS[number];
+
+export const PRIORITY_FILTERS = ['None','1','2','3','4','5'] as const;
+export type TaskPriority = typeof PRIORITY_FILTERS[number]

@@ -37,6 +37,9 @@ export default function (app: Express) {
     const rawSortBy = req.query.sortBy as string;
     const sortBy = rawSortBy?.toUpperCase();
 
+    const rawPriority = req.query.priority as string
+    const taskPriority = Number(rawPriority)  // for None, return NaN
+
     const whereCondition: Prisma.TaskWhereInput = {
       userId: res.locals.user.id,
     };
@@ -45,6 +48,10 @@ export default function (app: Express) {
       whereCondition.taskStatus = taskStatus;
     }
 
+    if(rawPriority && taskPriority>=1 && taskPriority<=5){
+      whereCondition.priority = taskPriority
+    }
+    
     const orderCondition = (() => {
       switch (sortBy) {
         case 'START TIME: ASC':
@@ -59,6 +66,7 @@ export default function (app: Express) {
           return { startTime: 'asc' as Prisma.SortOrder };
       }
     })();
+
 
     const task = await prisma.task.findMany({
       where: whereCondition,
