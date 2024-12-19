@@ -45,7 +45,7 @@ const TaskList = () => {
             transition={{ duration: 0.5, type: 'tween' }}
         >
             <div className="w-full">
-                <div className="flex flex-row items-center justify-between px-3 py-4 transition-all md:px-5 md:py-6">
+                <div className="flex flex-row items-center justify-between px-3 py-4 transition-all ">
                     <h1 className="flex items-center text-xl font-semibold md:text-2xl">
                         Task List{' '}
                         <LayoutDashboard className={'ml-2 h-5 w-5 md:ml-3 md:h-6 md:w-6'} />
@@ -60,7 +60,7 @@ const TaskList = () => {
                     />
                 </div>
                 <hr className={'border-accent'} />
-                <div className={'my-10 flex flex-col items-center justify-center transition-all'}>
+                <div className={'mb-10 mt-4 flex flex-col items-center justify-center transition-all'}>
                     <Table
                         allTask={allTask}
                         setAllTask={setAllTask}

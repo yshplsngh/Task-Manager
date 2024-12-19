@@ -83,7 +83,7 @@ const Table = (
             setLoading(true);
             try {
                 await dispatch(deleteTasks(isValid.data)).unwrap();
-                toast.success('task deleted');
+                toast.success('Task deleted');
                 //here we use set coz set have O(1) lookup time
                 const remainingTask = allTask.filter(task => !selectedTasks.has(task.id));
                 setAllTask(remainingTask);
@@ -250,7 +250,7 @@ const Table = (
                     <tbody>
                         {allTask && allTask.map((task) => {
                             return (
-                                <tr key={task.id}>
+                                <tr key={task.id} >
                                     <TableData key={'Delete All'} data={<Checkbox checked={selectedTasks.has(task.id)} onCheckedChange={(checkBoxValue) => handleTaskSelection(task.id, checkBoxValue)} />} />
                                     {tableHead.slice(1).map((head) => (
                                         <TableData key={head} data={getCellContent(task, head)} task={task} />
