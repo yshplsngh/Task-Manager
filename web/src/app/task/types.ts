@@ -60,3 +60,9 @@ export type SortMethod = typeof SORT_FILTERS[number];
 
 export const PRIORITY_FILTERS = ['None','1','2','3','4','5'] as const;
 export type TaskPriority = typeof PRIORITY_FILTERS[number]
+
+export const TaskIdsSchema = z.object({
+  ids: z.array(z.number()).min(1)
+})
+
+export type TaskIdsSchemaType = z.infer<typeof TaskIdsSchema>

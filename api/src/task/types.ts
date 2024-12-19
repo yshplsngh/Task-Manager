@@ -13,3 +13,7 @@ export const TaskSchema = z.object({
 export const TaskWithIdSchema = TaskSchema.extend({
   id: z.number().int().positive()
 })
+
+export const TaskIdsSchema = z.object({
+  ids: z.array(z.number()).min(1)
+})

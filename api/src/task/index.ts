@@ -1,6 +1,6 @@
 import type { Express, Request, Response, NextFunction } from 'express';
 import requireUser from '../utils/middleware/requireUser';
-import { TaskSchema, TaskWithIdSchema } from './types';
+import { TaskIdsSchema, TaskSchema, TaskWithIdSchema } from './types';
 import prisma from '../database';
 import { createError } from '../utils/middleware/errorHandling';
 import dayjs from 'dayjs';
@@ -37,21 +37,21 @@ export default function (app: Express) {
     const rawSortBy = req.query.sortBy as string;
     const sortBy = rawSortBy?.toUpperCase();
 
-    const rawPriority = req.query.priority as string
-    const taskPriority = Number(rawPriority)  // for None, return NaN
+    const rawPriority = req.query.priority as string;
+    const taskPriority = Number(rawPriority); // for None, return NaN
 
     const whereCondition: Prisma.TaskWhereInput = {
       userId: res.locals.user.id,
     };
-    
+
     if (taskStatus && (taskStatus === 'FINISHED' || taskStatus === 'PENDING')) {
       whereCondition.taskStatus = taskStatus;
     }
 
-    if(rawPriority && taskPriority>=1 && taskPriority<=5){
-      whereCondition.priority = taskPriority
+    if (rawPriority && taskPriority >= 1 && taskPriority <= 5) {
+      whereCondition.priority = taskPriority;
     }
-    
+
     const orderCondition = (() => {
       switch (sortBy) {
         case 'START TIME: ASC':
@@ -66,7 +66,6 @@ export default function (app: Express) {
           return { startTime: 'asc' as Prisma.SortOrder };
       }
     })();
-
 
     const task = await prisma.task.findMany({
       where: whereCondition,
@@ -240,6 +239,28 @@ export default function (app: Express) {
       };
 
       return res.status(200).json(response);
+    },
+  );
+
+  app.post(
+    '/api/task/deleteTasks',
+    requireUser,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const parsedResult = TaskIdsSchema.safeParse(req.body);
+      if (!parsedResult.success) {
+        return next(parsedResult.error);
+      }
+
+      await prisma.task.deleteMany({
+        where: {
+          userId: res.locals.user.id,
+          id: {
+            in: parsedResult.data.ids,
+          },
+        },
+      });
+      
+      return res.status(200).json({ success: true });
     },
   );
 }

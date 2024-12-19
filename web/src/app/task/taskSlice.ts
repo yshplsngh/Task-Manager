@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { api, type ProcessedResponse } from '../../utils/api';
 import { RootState } from '../store';
-import type { BRawDataType, BTaskSchemaType, SortMethod, TaskPriority, TaskSchemaType, TaskStatus } from './types';
+import type { BRawDataType, BTaskSchemaType, SortMethod, TaskIdsSchemaType, TaskPriority, TaskSchemaType, TaskStatus } from './types';
 
 export const createNewTask = createAsyncThunk(
   '/api/task/new',
@@ -37,6 +37,12 @@ export const getRawData = createAsyncThunk('/api/task/getRawData', async () => {
   const url = '/api/task/getRawData';
   return api.get<BRawDataType>(url);
 });
+export const deleteTasks = createAsyncThunk(
+  '/api/task/deleteTasks',async (data: TaskIdsSchemaType) => {
+    const url = '/api/task/deleteTasks';
+    return api.post(url,data);
+  }
+)
 
 const taskAdapter = createEntityAdapter<BTaskSchemaType>();
 

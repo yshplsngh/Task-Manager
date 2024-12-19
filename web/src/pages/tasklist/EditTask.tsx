@@ -24,7 +24,6 @@ const EditTask = () => {
     const [task, setTask] = useState<TaskSchemaType>({ title: '', priority: 1, taskStatus: 'PENDING', startTime: '', endTime: '' });
     const [loading, setLoading] = useState<boolean>(false);
     const [editLoading, setEditLoading] = useState<boolean>(false);
-
     const { taskId } = useParams<{ taskId: string }>();
 
     const singleTask = useSelector((state: RootState) => selectTaskById(state, Number(taskId)))

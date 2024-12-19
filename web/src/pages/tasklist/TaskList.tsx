@@ -30,7 +30,7 @@ const TaskList = () => {
             } catch (err) {
                 const errorMessage =
                     (err as FetchResponseError).message ||
-                    'An error occurred while fetching spaces';
+                    'An error occurred while fetching tasks';
                 toast.error(errorMessage);
             }
         }
@@ -63,6 +63,8 @@ const TaskList = () => {
                 <div className={'my-10 flex flex-col items-center justify-center transition-all'}>
                     <Table
                         allTask={allTask}
+                        setAllTask={setAllTask}
+
                         STATUS_FILTERS={STATUS_FILTERS}
                         activeStatusFilter={activeStatusFilter}
                         setActiveStatusFilter={setActiveStatusFilter}
