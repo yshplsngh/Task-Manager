@@ -66,7 +66,7 @@ const Login = () => {
                                 <h3 className="text-xl font-semibold tracking-wide">
                                     {import.meta.env.VITE_ENV === 'development'
                                         ? 'Sign in to localhost'
-                                        : 'Sign in to testimonial'}
+                                        : 'Sign in to Taskmanager'}
                                 </h3>
                                 <p className="text-sm tracking-wide text-gray-500">
                                     to continue to {WEB_NAME}
