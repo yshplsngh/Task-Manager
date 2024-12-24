@@ -23,7 +23,7 @@ jobs:
           context: ./api
           file: ./api/Dockerfile
           push: true
-          tags: yshplsngh/testimonial:latest
+          tags: yshplsngh/task:latest
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
@@ -33,9 +33,9 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           port: 22
           script: |
-            sudo docker stop backend || true
-            sudo docker rm backend || true
-            sudo docker rmi yshplsngh/testimonial:latest --force || true
-            sudo docker compose up -d
+            sudo docker stop task || true
+            sudo docker rm task || true
+            sudo docker rmi yshplsngh/task:latest --force || true
+            sudo docker run --name task -d -p 4001:4000 -e DATABASE_URL=${{secrets.DB_URL}} -e CLIENT_ID=${{secrets.GOOGLE_CLIENT_ID}} -e CLIENT_SECRET=${{secrets.GOOGLE_CLIENT_SECRET}} yshplsngh/task:latest
             
           
