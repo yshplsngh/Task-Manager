@@ -36,6 +36,6 @@ jobs:
             sudo docker stop task || true
             sudo docker rm task || true
             sudo docker rmi yshplsngh/task:latest --force || true
-            sudo docker run --name task -d -p 4001:4000 -e DATABASE_URL=${{secrets.DB_URL}} -e CLIENT_ID=${{secrets.GOOGLE_CLIENT_ID}} -e CLIENT_SECRET=${{secrets.GOOGLE_CLIENT_SECRET}} yshplsngh/task:latest
+            sudo docker run --name task -d -p 4001:4000 -e DATABASE_URL=${{secrets.DB_URL}} -e AT_SECRET=${{secrets.AT_SECRET}} -e CLIENT_SECRET=${{secrets.GOOGLE_CLIENT_SECRET}} yshplsngh/task:latest
             
           
