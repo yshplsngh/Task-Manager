@@ -29,30 +29,28 @@ export default function authRoutes(app: Express): void {
         next(parsedResult.error);
         return;
       }
-      const userExist = await prisma.user.findUnique({
+      let userExist = await prisma.user.findUnique({
         where: {
           email: parsedResult.data.email,
         },
       });
+
       if (!userExist) {
         const hashedPass = await bcrypt.hash(parsedResult.data.password, 10);
-        await prisma.user.create({
+        userExist = await prisma.user.create({
           data: {
             email: parsedResult.data.email,
             password: hashedPass,
           },
         });
+      }else{
+        const matchPass = await bcrypt.compare(parsedResult.data.password, userExist.password)
+        if(!matchPass){
+          return next(new createError('Invalid password', 401))
+        }
       }
 
-      const user = await prisma.user.findUnique({
-        where: {
-          email: parsedResult.data.email,
-        },
-        select: {
-          id:true,
-          email: true,
-        },
-      });
+      const {password,createdAt,updatedAt, ...user} = userExist;
 
       if (!user) {
         return next(new createError('failed to create user', 422));
