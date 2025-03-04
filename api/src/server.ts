@@ -24,7 +24,7 @@ export const createServer = (): Express => {
       origin:
         config.NODE_ENV === 'development'
           ? [config.DEV_WEB_URL]
-          : [config.PROD_WEB_URL],
+          : [config.PROD_WEB_URL, config.PROD_WEB_URL_2],
       credentials: true,
     }),
   );
