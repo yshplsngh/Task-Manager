@@ -16,8 +16,8 @@ import config from '../utils/config';
 export const ATCookieOptions: CookieOptions = {
   maxAge: 604800000,
   httpOnly: true,
-  sameSite: 'lax',
-  secure: false,
+  sameSite: config.NODE_ENV === 'development' ? 'lax' : 'none',
+  secure: config.NODE_ENV === 'development' ? false : true,
 };
 
 export default function authRoutes(app: Express): void {
