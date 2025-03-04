@@ -1,7 +1,6 @@
 import Button from '../ui/Button';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { WEB_NAME } from '../utils/api';
 
 const NotFound = ({ message }: { message?: string }) => {
   return (
@@ -23,7 +22,7 @@ const NotFound = ({ message }: { message?: string }) => {
             text={'Go Home Page 🏡'}
           />
         </Link>
-        <p className="mt-2 text-center font-thin text-slate-200">{WEB_NAME}</p>
+        <p className="mt-2 text-center font-thin text-slate-200">Task Manager</p>
       </div>
     </motion.div>
   );

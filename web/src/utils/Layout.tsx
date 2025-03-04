@@ -4,7 +4,6 @@ import { Toaster } from '../ui/Toaster';
 import Header from '../ui/Header';
 
 import { useLocation } from 'react-router-dom';
-import { WEB_NAME } from './api';
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
@@ -24,7 +23,7 @@ const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
         <h1 className="tracking-widest text-slate-300 text-center text-sm">
           Ops! This application is not available for mobile devices. Please use a desktop or laptop.
         </h1>
-        <p className="mt-2 text-center font-thin text-slate-200">{WEB_NAME}</p>
+        <p className="mt-2 text-center font-thin text-slate-200">Task Manager</p>
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { WEB_NAME, type FetchResponseError } from '../utils/api';
+import { type FetchResponseError } from '../utils/api';
 import Button from '../ui/Button';
 import { AuthSchema , AuthSchemaType} from '../app/auth/types';
 import { useEffect, useState } from 'react';
@@ -69,7 +69,7 @@ const Login = () => {
                                         : 'Sign in to Taskmanager'}
                                 </h3>
                                 <p className="text-sm tracking-wide text-gray-500">
-                                    to continue to {WEB_NAME}
+                                    to continue to Task Manager
                                 </p>
                             </div>
                         </div>

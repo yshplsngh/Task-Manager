@@ -44,7 +44,7 @@ const Home = () => {
         {user?.email ? (
           <div className="mt-10">
             <Link
-              to={'https://github.com/yshplsngh/reunion'}
+              to={'https://github.com/Shiripandey'}
               target={'_blank'}
             >
               <Button
