@@ -67,19 +67,19 @@ const Dashboard = () => {
                     <h3 className="text-[2rem] font-semibold tracking-wide">Summary</h3>
                     <div className="flex space-x-14">
                         <div className="flex flex-col justify-start items-center ">
-                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-green-500 to-green-800 text-transparent bg-clip-text">{rawData?.totalTask}</h1>
+                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-amber-500 to-amber-800 text-transparent bg-clip-text">{rawData?.totalTask}</h1>
                             <p className="text-xs text-slate-400 text-center">Total Tasks</p>
                         </div>
                         <div className="flex flex-col justify-start items-center">
-                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-green-500 to-green-800 text-transparent bg-clip-text">{rawData?.tasksCompleted}%</h1>
+                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-amber-500 to-amber-800 text-transparent bg-clip-text">{rawData?.tasksCompleted}%</h1>
                             <p className="text-xs text-slate-400 text-center">Tasks Completed</p>
                         </div>
                         <div className="flex flex-col justify-start items-center">
-                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-green-500 to-green-800 text-transparent bg-clip-text">{rawData?.tasksPending}%</h1>
+                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-amber-500 to-amber-800 text-transparent bg-clip-text">{rawData?.tasksPending}%</h1>
                             <p className="text-xs text-slate-400 text-center">Task Pending</p>
                         </div>
                         <div className="flex flex-col justify-center items-center">
-                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-green-500 to-green-800 text-transparent bg-clip-text">{rawData && calculateTime(rawData.averageTimePerTask)}</h1>
+                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-amber-500 to-amber-800 text-transparent bg-clip-text">{rawData && calculateTime(rawData.averageTimePerTask)}</h1>
                             <p className="text-xs text-slate-400 text-center">Average Time per completed task</p>
                         </div>
                     </div>
@@ -89,15 +89,15 @@ const Dashboard = () => {
                     <h3 className="text-[2rem] font-semibold tracking-wide">Pending task summary</h3>
                     <div className="flex space-x-14">
                         <div className="flex flex-col justify-start items-center ">
-                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-green-500 to-green-800 text-transparent bg-clip-text">{rawData?.pendingTasks}</h1>
+                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-amber-500 to-amber-800 text-transparent bg-clip-text">{rawData?.pendingTasks}</h1>
                             <p className="text-xs text-slate-400 text-center">Pending Tasks</p>
                         </div>
                         <div className="flex flex-col justify-start items-center">
-                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-green-500 to-green-800 text-transparent bg-clip-text">{rawData && calculateTime(rawData.totalTimeLapsed)}</h1>
+                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-amber-500 to-amber-800 text-transparent bg-clip-text">{rawData && calculateTime(rawData.totalTimeLapsed)}</h1>
                             <p className="text-xs text-slate-400 text-center">Total time lapsed</p>
                         </div>
                         <div className="flex flex-col justify-start items-center">
-                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-green-500 to-green-800 text-transparent bg-clip-text">{rawData && calculateTime(rawData.totalTimeToFinish)}</h1>
+                            <h1 className="font-bold text-[1.7rem] bg-gradient-to-br from-amber-500 to-amber-800 text-transparent bg-clip-text">{rawData && calculateTime(rawData.totalTimeToFinish)}</h1>
                             <p className="text-xs text-slate-400 text-center">Total time to finish</p>
                         </div>
                     </div>

@@ -23,7 +23,7 @@ function Header() {
 
   const loginBtn = (
     <Link to="/login">
-      <Button type={'button'} variant={'outlineB'} text={'Sign in'} className="border-green-400 border text-white bg-gradient-to-br from-green-500 to-green-800  px-3 py-1 rounded-md w-fit mx-auto" />
+      <Button type={'button'} variant={'outlineB'} text={'Sign in'} className="border-amber-400 border text-white bg-gradient-to-br from-amber-500 to-amber-800  px-3 py-1 rounded-md w-fit mx-auto" />
     </Link>
   );
 
@@ -36,7 +36,7 @@ function Header() {
       <div className="flex items-center justify-between px-5 py-2 md:px-9 md:py-5">
         <div className="text-xl md:text-3xl">
           <Link to={'/'} className="flex items-center space-x-1">
-            <span className="font-bold bg-gradient-to-br from-green-500 to-green-800 text-transparent bg-clip-text">Task Manager</span>
+            <span className="font-bold bg-gradient-to-br from-amber-500 to-amber-800 text-transparent bg-clip-text">Task Manager</span>
           </Link>
         </div>
 

@@ -56,7 +56,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     zIndex: 3,
     width: '100%',
     maxWidth: '400px',
-    backgroundImage: `linear-gradient(to bottom right, rgb(34 197 94 / 1), rgb(22, 101, 52))`,
+    backgroundImage: `linear-gradient(to bottom right, rgb(245 158 11 / 1), rgb(180 83 9 / 1))`,
     position: 'absolute',
     height: '400px',
     filter: 'blur(100px)',

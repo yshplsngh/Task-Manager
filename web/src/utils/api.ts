@@ -3,21 +3,6 @@ export const API_URL =
     ? 'http://localhost:4000'
     : 'https://taskserver.yshplsngh.in';
 
-export const WEB_URL =
-  import.meta.env.VITE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://task.yshplsngh.in';
-
-export const API_NAME =
-  import.meta.env.VITE_ENV === 'development'
-    ? 'localhost:4000'
-    : 'taskserver.yshplsngh.in';
-
-export const WEB_NAME =
-  import.meta.env.VITE_ENV === 'development'
-    ? 'localhost:3000'
-    : 'task.yshplsngh.in';
-
 type HttpMethod = 'get' | 'post' | 'put' | 'delete';
 
 export type RequestData = Record<string, unknown>;

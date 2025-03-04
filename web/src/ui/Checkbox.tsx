@@ -17,7 +17,7 @@ const Checkbox = ({ text, checked, onCheckedChange, ...props }: CheckboxProps) =
           type="checkbox"
           checked={checked}
           onChange={(e) => onCheckedChange?.(e.target.checked)}
-          className="peer h-5 w-5 cursor-pointer appearance-none rounded border-2 border-zinc-400 shadow transition-all checked:border-green-800 checked:bg-green-800 hover:shadow-md"
+          className="peer h-5 w-5 cursor-pointer appearance-none rounded border-2 border-zinc-400 shadow transition-all checked:border-amber-800 checked:bg-amber-800 hover:shadow-md"
           id={text?.split(' ').join('')}
           {...props}
         />
